@@ -1,8 +1,8 @@
 package guru.qa.niffler.page;
 
 import com.codeborne.selenide.SelenideElement;
-import org.junit.jupiter.api.Assertions;
 
+import static com.codeborne.selenide.Condition.text;
 import static com.codeborne.selenide.Condition.visible;
 import static com.codeborne.selenide.Selenide.$;
 
@@ -46,12 +46,10 @@ public class RegisterPage {
 	}
 
 	public void checkErrorUserAlreadyExist(String userName) {
-		String errorMessage = this.errorMessage.should(visible).text();
-		Assertions.assertEquals("Username `" + userName + "` already exists", errorMessage);
+		this.errorMessage.should(visible).shouldHave(text("Username `" + userName + "` already exists"));
 	}
 
 	public void checkErrorPasswordsShouldBeEqual() {
-		String errorMessage = this.errorMessage.should(visible).text();
-		Assertions.assertEquals("Passwords should be equal", errorMessage);
+		this.errorMessage.should(visible).shouldHave(text("Passwords should be equal"));
 	}
 }

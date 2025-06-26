@@ -1,8 +1,8 @@
 package guru.qa.niffler.page;
 
 import com.codeborne.selenide.SelenideElement;
-import org.junit.jupiter.api.Assertions;
 
+import static com.codeborne.selenide.Condition.text;
 import static com.codeborne.selenide.Condition.visible;
 import static com.codeborne.selenide.Selenide.$;
 
@@ -31,7 +31,6 @@ public class LoginPage {
 
   public void submitAndCheckErrorInvalidCredentials() {
     submitButton.click();
-    String errorMessage = this.errorMessage.should(visible).text();
-    Assertions.assertEquals("Неверные учетные данные пользователя", errorMessage);
+    this.errorMessage.should(visible).shouldHave(text("Неверные учетные данные пользователя"));
   }
 }

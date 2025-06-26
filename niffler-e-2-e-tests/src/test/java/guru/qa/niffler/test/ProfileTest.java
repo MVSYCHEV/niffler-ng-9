@@ -22,7 +22,7 @@ public class ProfileTest {
 				.findArchiveCategory(category.name());
 	}
 
-	@Category(username = "sychevTest", isArchived = false)
+	@Category(username = "sychevTest")
 	@Test
 	void activeCategoryShouldPresentInCategoriesList(CategoryJson category) {
 		Selenide.open(CFG.frontUrl(), LoginPage.class)

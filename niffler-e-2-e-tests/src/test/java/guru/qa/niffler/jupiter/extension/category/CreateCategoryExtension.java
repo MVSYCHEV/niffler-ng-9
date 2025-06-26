@@ -24,7 +24,7 @@ public class CreateCategoryExtension implements BeforeEachCallback, ParameterRes
 							null,
 							categoryName,
 							category.username(),
-							category.isArchived()
+							false
 					);
 					CategoryJson createdCategory = spendApiClient.addCategory(categoryJson);
 					if (category.isArchived()) {
@@ -68,11 +68,7 @@ public class CreateCategoryExtension implements BeforeEachCallback, ParameterRes
 						createdCategory.username(),
 						true
 				);
-				CategoryJson updatedCategory = spendApiClient.updateCategory(archivedCategory);
-				context.getStore(NAMESPACE).put(
-						context.getUniqueId(),
-						updatedCategory
-				);
+				spendApiClient.updateCategory(archivedCategory);
 			}
 		});
 	}
