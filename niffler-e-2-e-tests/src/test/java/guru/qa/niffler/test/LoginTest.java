@@ -4,7 +4,7 @@ import com.codeborne.selenide.Selenide;
 import guru.qa.niffler.config.Config;
 import guru.qa.niffler.jupiter.annotation.meta.WebTest;
 import guru.qa.niffler.page.LoginPage;
-import guru.qa.niffler.utils.DataUtils;
+import guru.qa.niffler.utils.RandomDataUtils;
 import guru.qa.niffler.utils.Users;
 import org.junit.jupiter.api.Test;
 
@@ -24,7 +24,7 @@ public class LoginTest {
   @Test
   void userShouldStayOnLoginPageAfterLoginWithBadCredentials() {
     Selenide.open(CFG.frontUrl(), LoginPage.class)
-            .fillLoginPage(DataUtils.getRandomUserName(), DataUtils.getRandomUserPassword())
+            .fillLoginPage(RandomDataUtils.randomUserName(), RandomDataUtils.randomPassword())
             .submitAndCheckErrorInvalidCredentials();
   }
 }
