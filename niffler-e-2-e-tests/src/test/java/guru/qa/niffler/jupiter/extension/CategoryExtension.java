@@ -1,4 +1,4 @@
-package guru.qa.niffler.jupiter.extension.category;
+package guru.qa.niffler.jupiter.extension;
 
 import guru.qa.niffler.api.SpendApiClient;
 import guru.qa.niffler.jupiter.annotation.Category;
@@ -8,8 +8,10 @@ import org.junit.platform.commons.support.AnnotationSupport;
 
 import java.util.Random;
 
-public class CreateCategoryExtension implements BeforeEachCallback, ParameterResolver, AfterTestExecutionCallback {
-	public static final ExtensionContext.Namespace NAMESPACE = ExtensionContext.Namespace.create(CreateCategoryExtension.class);
+import static guru.qa.niffler.jupiter.extension.TestMethodContextExtension.context;
+
+public class CategoryExtension implements BeforeEachCallback, ParameterResolver, AfterTestExecutionCallback {
+	public static final ExtensionContext.Namespace NAMESPACE = ExtensionContext.Namespace.create(CategoryExtension.class);
 	private final SpendApiClient spendApiClient = new SpendApiClient();
 
 	@Override
@@ -51,7 +53,13 @@ public class CreateCategoryExtension implements BeforeEachCallback, ParameterRes
 
 	@Override
 	public Object resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext) throws ParameterResolutionException {
-		return extensionContext.getStore(CreateCategoryExtension.NAMESPACE).get(extensionContext.getUniqueId(), CategoryJson.class);
+		return createdCategory();
+	}
+
+	public static CategoryJson createdCategory() {
+		final ExtensionContext methodContext = context();
+		return methodContext.getStore(NAMESPACE)
+				.get(methodContext.getUniqueId(), CategoryJson.class);
 	}
 
 	@Override
