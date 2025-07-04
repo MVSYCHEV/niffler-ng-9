@@ -1,6 +1,7 @@
 package guru.qa.niffler.jupiter.extension;
 
 import io.qameta.allure.Allure;
+import org.apache.commons.lang3.time.StopWatch;
 import org.junit.jupiter.api.extension.*;
 import org.junit.platform.commons.support.AnnotationSupport;
 
@@ -10,6 +11,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import java.util.*;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.TimeUnit;
 
 public class UsersQueueExtension implements
 		BeforeTestExecutionCallback,
@@ -55,7 +57,11 @@ public class UsersQueueExtension implements
 				.filter(p -> AnnotationSupport.isAnnotated(p, UserType.class))
 				.forEach(p -> {
 					UserType userType = p.getAnnotation(UserType.class);
+					StopWatch stopWatch = StopWatch.createStarted();
 					StaticUser user = getQueueByType(userType).poll();
+					while (user == null && stopWatch.getTime(TimeUnit.SECONDS) < 30) {
+						user = getQueueByType(userType).poll();
+					}
 					mapOfUsers.put(userType, user);
 				});
 		context.getStore(NAMESPACE).put(context.getUniqueId(), mapOfUsers);
@@ -82,8 +88,7 @@ public class UsersQueueExtension implements
 	@Override
 	public Object resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext) throws ParameterResolutionException {
 		Map<UserType, StaticUser> users = extensionContext.getStore(NAMESPACE).get(extensionContext.getUniqueId(), Map.class);
-		StaticUser user = users.get(parameterContext.getParameter().getAnnotation(UserType.class));
-		return user;
+		return users.get(parameterContext.getParameter().getAnnotation(UserType.class));
 	}
 
 	private Queue<StaticUser> getQueueByType(UserType userType) {

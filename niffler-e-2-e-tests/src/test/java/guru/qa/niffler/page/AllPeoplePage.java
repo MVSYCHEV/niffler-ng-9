@@ -15,6 +15,6 @@ public class AllPeoplePage {
 	}
 
 	public void checkAllTableHasOutcomeRequestToUser(String userName) {
-		allTable.$$("tbody tr").get(0).$$("td").get(0).shouldHave(text(userName));
+		allTable.$$("tbody tr").get(0).$("td").shouldHave(text(userName));
 	}
 }
