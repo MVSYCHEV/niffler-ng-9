@@ -84,7 +84,7 @@ public class CategoryExtension implements BeforeEachCallback, ParameterResolver,
 				});
 	}
 
-	private CategoryJson defaultCategory(String userName) {
+	private static CategoryJson defaultCategory(String userName) {
 		return new CategoryJson(
 				null,
 				RandomDataUtils.randomCategoryName(),
@@ -93,7 +93,7 @@ public class CategoryExtension implements BeforeEachCallback, ParameterResolver,
 		);
 	}
 
-	private CategoryJson categoryWithName(String userName, String categoryName) {
+	private static CategoryJson categoryWithName(String userName, String categoryName) {
 		return new CategoryJson(
 				null,
 				categoryName,
