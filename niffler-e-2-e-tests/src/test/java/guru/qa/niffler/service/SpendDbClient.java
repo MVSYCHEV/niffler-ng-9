@@ -50,6 +50,11 @@ public class SpendDbClient {
 		spendDao.deleteSpend(spend);
 	}
 
+	public CategoryJson createCategory(CategoryJson categoryJson) {
+		CategoryEntity categoryEntity = CategoryEntity.fromJson(categoryJson);
+		return CategoryJson.fromEntity(categoryDao.create(categoryEntity));
+	}
+
 	public CategoryJson getCategory(String username, String categoryName) {
 		Optional<CategoryEntity> categoryEntity =
 				categoryDao.findCategoryByUsernameAndCategoryName(username, categoryName);

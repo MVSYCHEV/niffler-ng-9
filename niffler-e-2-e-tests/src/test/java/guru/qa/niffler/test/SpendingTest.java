@@ -19,7 +19,7 @@ public class SpendingTest {
 			spends = @Spending(
 					amount = 89990.00,
 					description = "New Category",
-					category = "Обучение"
+					category = "categoryNameRandom" // TODO Здесь нельзя запустить тест 2 раза с одинаковым именем т.к. в БД нельзя добавить существующую категорию
 			))
 	@DisabledByIssue("3")
 	@Test
