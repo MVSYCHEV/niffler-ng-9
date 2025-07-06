@@ -17,7 +17,7 @@ public class UserDataUserDaoJdbc implements UserDataUserDao {
 	public UserEntity createUser(UserEntity user) {
 		try (Connection connection = Databases.connection(CFG.userdataJdbcUrl())) {
 			try (PreparedStatement ps = connection.prepareStatement(
-					"INSERT INTO userdata (username, currency, fullname, firstname, surname, photo, photoSmall) " +
+					"INSERT INTO user (username, currency, fullname, firstname, surname, photo, photoSmall) " +
 							"VALUES ( ?, ?, ?, ?, ?, ?, ?)",
 					Statement.RETURN_GENERATED_KEYS
 			)) {
@@ -51,7 +51,7 @@ public class UserDataUserDaoJdbc implements UserDataUserDao {
 	public Optional<UserEntity> findById(UUID id) {
 		try (Connection connection = Databases.connection(CFG.userdataJdbcUrl())) {
 			try (PreparedStatement ps = connection.prepareStatement(
-					"SELECT * FROM userdata WHERE id = ?"
+					"SELECT * FROM user WHERE id = ?"
 			)) {
 				ps.setObject(1, id);
 				ps.execute();
@@ -85,7 +85,7 @@ public class UserDataUserDaoJdbc implements UserDataUserDao {
 	public Optional<UserEntity> findByUsername(String username) {
 		try (Connection connection = Databases.connection(CFG.userdataJdbcUrl())) {
 			try (PreparedStatement ps = connection.prepareStatement(
-					"SELECT * FROM userdata WHERE username = ?"
+					"SELECT * FROM user WHERE username = ?"
 			)) {
 				ps.setObject(1, username);
 				ps.execute();
@@ -119,7 +119,7 @@ public class UserDataUserDaoJdbc implements UserDataUserDao {
 	public void delete(UserEntity user) {
 		try (Connection connection = Databases.connection(CFG.userdataJdbcUrl())) {
 			try (PreparedStatement ps = connection.prepareStatement(
-					"DELETE FROM userdata WHERE id = ?"
+					"DELETE FROM user WHERE id = ?"
 			)) {
 				ps.setObject(1, user.getId());
 				int deleteRows = ps.executeUpdate();
