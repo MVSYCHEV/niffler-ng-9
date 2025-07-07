@@ -10,6 +10,7 @@ import guru.qa.niffler.model.CategoryJson;
 import guru.qa.niffler.model.SpendJson;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -32,15 +33,24 @@ public class SpendDbClient {
 
 	public SpendJson getSpend(UUID id) {
 		Optional<SpendEntity> spendEntity = spendDao.findSpendById(id);
-		SpendJson spendJson = null;
-		if (!spendEntity.isEmpty()) {
-			spendJson = SpendJson.fromEntity(spendEntity.get());
-		}
-		return spendJson;
+
+		UUID categoryId = spendEntity
+				.map(spend -> spend.getCategory().getId())
+				.orElseThrow(() -> new NoSuchElementException("No value present"));
+		Optional<CategoryEntity> categoryEntity = categoryDao.findById(categoryId);
+		categoryEntity.ifPresent(category -> spendEntity.get().setCategory(category));
+		return SpendJson.fromEntity(spendEntity.get());
 	}
 
 	public List<SpendJson> getSpends(String username) {
 		List<SpendEntity> entities = spendDao.findAllByUsername(username);
+
+		for (SpendEntity spend : entities) {
+			UUID categoryId = spend.getCategory().getId();
+			Optional<CategoryEntity> categoryEntity = categoryDao.findById(categoryId);
+			categoryEntity.ifPresent(category -> spend.setCategory(category));
+		}
+
 		return entities.stream()
 				.map(entity -> SpendJson.fromEntity(entity))
 				.collect(Collectors.toList());
@@ -57,7 +67,7 @@ public class SpendDbClient {
 
 	public CategoryJson getCategory(String username, String categoryName) {
 		Optional<CategoryEntity> categoryEntity =
-				categoryDao.findCategoryByUsernameAndCategoryName(username, categoryName);
+				categoryDao.findByUsernameAndCategoryName(username, categoryName);
 		CategoryJson categoryJson = null;
 		if (!categoryEntity.isEmpty()) {
 			categoryJson = CategoryJson.fromEntity(categoryEntity.get());
