@@ -74,15 +74,15 @@ public class SpendDaoJdbc implements SpendDao {
 					spendEntity.setSpendDate(resultSet.getDate("spend_date"));
 
 					UUID categoryId = resultSet.getObject("category_id", UUID.class);
-					Optional<CategoryEntity> category = new CategoryDaoJdbc(connection).findCategoryById(categoryId);
-					if (category.isPresent()) {
-						spendEntity.setCategory(category.get());
-					}
+					CategoryEntity category = new CategoryEntity();
+					category.setId(categoryId);
+					spendEntity.setCategory(category);
+
 					return Optional.of(spendEntity);
 				} else {
 					return Optional.empty();
 				}
-			}
+				}
 		} catch (SQLException e) {
 			throw new RuntimeException(e);
 		}
@@ -111,10 +111,9 @@ public class SpendDaoJdbc implements SpendDao {
 					spendEntity.setSpendDate(resultSet.getDate("spend_date"));
 
 					UUID categoryId = resultSet.getObject("category_id", UUID.class);
-					Optional<CategoryEntity> category = new CategoryDaoJdbc(connection).findCategoryById(categoryId);
-					if (category.isPresent()) {
-						spendEntity.setCategory(category.get());
-					}
+					CategoryEntity category = new CategoryEntity();
+					category.setId(categoryId);
+					spendEntity.setCategory(category);
 					allSpends.add(spendEntity);
 				}
 			}

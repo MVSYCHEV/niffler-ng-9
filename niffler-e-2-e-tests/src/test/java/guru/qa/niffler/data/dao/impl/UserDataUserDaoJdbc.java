@@ -50,7 +50,7 @@ public class UserDataUserDaoJdbc implements UserDataUserDao {
 	@Override
 	public Optional<UserDataUserEntity> findById(UUID id) {
 		try (PreparedStatement ps = connection.prepareStatement(
-				"SELECT * FROM userdata WHERE id = ?"
+				"SELECT * FROM \"user\" WHERE id = ?"
 		)) {
 			ps.setObject(1, id);
 			ps.execute();
@@ -82,7 +82,7 @@ public class UserDataUserDaoJdbc implements UserDataUserDao {
 	@Override
 	public Optional<UserDataUserEntity> findByUsername(String username) {
 		try (PreparedStatement ps = connection.prepareStatement(
-				"SELECT * FROM userdata WHERE username = ?"
+				"SELECT * FROM \"user\" WHERE username = ?"
 		)) {
 			ps.setObject(1, username);
 			ps.execute();
@@ -114,7 +114,7 @@ public class UserDataUserDaoJdbc implements UserDataUserDao {
 	@Override
 	public void delete(UserDataUserEntity user) {
 		try (PreparedStatement ps = connection.prepareStatement(
-				"DELETE FROM userdata WHERE id = ?"
+				"DELETE FROM \"user\" WHERE id = ?"
 		)) {
 			ps.setObject(1, user.getId());
 			int deleteRows = ps.executeUpdate();

@@ -10,6 +10,7 @@ import guru.qa.niffler.model.spend.SpendJson;
 
 import java.sql.Connection;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -40,11 +41,12 @@ public class SpendDbClient {
 		return transaction(connection -> {
 					Optional<SpendEntity> spendEntity = new SpendDaoJdbc(connection)
 							.findSpendById(id);
-					SpendJson spendJson = null;
-					if (!spendEntity.isEmpty()) {
-						spendJson = SpendJson.fromEntity(spendEntity.get());
-					}
-					return spendJson;
+					UUID categoryId = spendEntity
+							.map(spend -> spend.getCategory().getId())
+							.orElseThrow(() -> new NoSuchElementException("No value present"));
+					Optional<CategoryEntity> categoryEntity = new CategoryDaoJdbc(connection).findById(categoryId);
+					categoryEntity.ifPresent(category -> spendEntity.get().setCategory(category));
+					return SpendJson.fromEntity(spendEntity.get());
 				},
 				CFG.spendJdbcUrl(),
 				Connection.TRANSACTION_READ_UNCOMMITTED
@@ -54,6 +56,13 @@ public class SpendDbClient {
 	public List<SpendJson> getSpends(String username) {
 		return transaction(connection -> {
 					List<SpendEntity> entities = new SpendDaoJdbc(connection).findAllByUsername(username);
+
+					for (SpendEntity spend : entities) {
+						UUID categoryId = spend.getCategory().getId();
+						Optional<CategoryEntity> categoryEntity = new CategoryDaoJdbc(connection).findById(categoryId);
+						categoryEntity.ifPresent(category -> spend.setCategory(category));
+					}
+
 					return entities.stream()
 							.map(entity -> SpendJson.fromEntity(entity))
 							.collect(Collectors.toList());
@@ -85,7 +94,7 @@ public class SpendDbClient {
 	public CategoryJson getCategory(String username, String categoryName) {
 		return transaction(connection -> {
 					Optional<CategoryEntity> categoryEntity =
-							new CategoryDaoJdbc(connection).findCategoryByUsernameAndCategoryName(username, categoryName);
+							new CategoryDaoJdbc(connection).findByUsernameAndCategoryName(username, categoryName);
 					CategoryJson categoryJson = null;
 					if (!categoryEntity.isEmpty()) {
 						categoryJson = CategoryJson.fromEntity(categoryEntity.get());

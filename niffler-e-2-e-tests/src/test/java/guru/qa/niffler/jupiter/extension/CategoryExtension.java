@@ -62,16 +62,9 @@ public class CategoryExtension implements BeforeEachCallback, ParameterResolver,
 				annotations -> {
 					if (annotations.categories().length != 0) {
 						CategoryJson createdCategory = (CategoryJson) context.getStore(NAMESPACE).get(context.getUniqueId());
-						if (createdCategory != null && !createdCategory.archived()) {
-							CategoryJson archivedCategory = new CategoryJson(
-									createdCategory.id(),
-									createdCategory.name(),
-									createdCategory.username(),
-									true
-							);
+						if (createdCategory != null) {
 							spendDbClient.deleteCategory(CategoryEntity.fromJson(createdCategory));
-							spendDbClient.createCategory(archivedCategory);
-						} else if (createdCategory == null && annotations.categories().length == 0 && annotations.spends().length != 0) {
+						} else if (annotations.categories().length == 0 && annotations.spends().length != 0) {
 							spendDbClient.createCategory(defaultCategoryWithName(annotations.username(), annotations.spends()[0].category()));
 						}
 					}
