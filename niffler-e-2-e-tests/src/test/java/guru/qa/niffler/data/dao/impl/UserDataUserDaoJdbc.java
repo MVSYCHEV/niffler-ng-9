@@ -1,8 +1,8 @@
 package guru.qa.niffler.data.dao.impl;
 
 import guru.qa.niffler.data.dao.UserDataUserDao;
-import guru.qa.niffler.data.entity.userdata.UserEntity;
-import guru.qa.niffler.model.CurrencyValues;
+import guru.qa.niffler.data.entity.userdata.UserDataUserEntity;
+import guru.qa.niffler.model.spend.CurrencyValues;
 
 import java.sql.*;
 import java.util.Optional;
@@ -16,9 +16,9 @@ public class UserDataUserDaoJdbc implements UserDataUserDao {
 	}
 
 	@Override
-	public UserEntity createUser(UserEntity user) {
+	public UserDataUserEntity createUser(UserDataUserEntity user) {
 		try (PreparedStatement ps = connection.prepareStatement(
-				"INSERT INTO userdata (username, currency, fullname, firstname, surname, photo, photoSmall) " +
+				"INSERT INTO \"user\" (username, currency, full_name, firstname, surname, photo, photo_small) " +
 						"VALUES ( ?, ?, ?, ?, ?, ?, ?)",
 				Statement.RETURN_GENERATED_KEYS
 		)) {
@@ -48,7 +48,7 @@ public class UserDataUserDaoJdbc implements UserDataUserDao {
 	}
 
 	@Override
-	public Optional<UserEntity> findById(UUID id) {
+	public Optional<UserDataUserEntity> findById(UUID id) {
 		try (PreparedStatement ps = connection.prepareStatement(
 				"SELECT * FROM userdata WHERE id = ?"
 		)) {
@@ -56,7 +56,7 @@ public class UserDataUserDaoJdbc implements UserDataUserDao {
 			ps.execute();
 			try (ResultSet rs = ps.getResultSet()) {
 				if (rs.next()) {
-					UserEntity userEntity = new UserEntity();
+					UserDataUserEntity userEntity = new UserDataUserEntity();
 					userEntity.setId(rs.getObject("id", UUID.class));
 					userEntity.setUsername(rs.getString("username"));
 
@@ -80,7 +80,7 @@ public class UserDataUserDaoJdbc implements UserDataUserDao {
 	}
 
 	@Override
-	public Optional<UserEntity> findByUsername(String username) {
+	public Optional<UserDataUserEntity> findByUsername(String username) {
 		try (PreparedStatement ps = connection.prepareStatement(
 				"SELECT * FROM userdata WHERE username = ?"
 		)) {
@@ -88,7 +88,7 @@ public class UserDataUserDaoJdbc implements UserDataUserDao {
 			ps.execute();
 			try (ResultSet rs = ps.getResultSet()) {
 				if (rs.next()) {
-					UserEntity userEntity = new UserEntity();
+					UserDataUserEntity userEntity = new UserDataUserEntity();
 					userEntity.setId(rs.getObject("id", UUID.class));
 					userEntity.setUsername(rs.getString("username"));
 
@@ -112,7 +112,7 @@ public class UserDataUserDaoJdbc implements UserDataUserDao {
 	}
 
 	@Override
-	public void delete(UserEntity user) {
+	public void delete(UserDataUserEntity user) {
 		try (PreparedStatement ps = connection.prepareStatement(
 				"DELETE FROM userdata WHERE id = ?"
 		)) {

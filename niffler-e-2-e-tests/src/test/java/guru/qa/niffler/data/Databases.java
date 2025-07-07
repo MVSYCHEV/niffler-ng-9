@@ -110,19 +110,6 @@ public class Databases {
 		}
 	}
 
-//	private static DataSource dataSource(String jdbcUrl) {
-//		return dataSources.computeIfAbsent(
-//				jdbcUrl,
-//				key -> {
-//					PGSimpleDataSource ds = new PGSimpleDataSource();
-//					ds.setUser("postgres");
-//					ds.setPassword("secret");
-//					ds.setUrl(key);
-//					return ds;
-//				}
-//		);
-//	}
-
 	private static DataSource dataSource(String jdbcUrl) {
 		return dataSources.computeIfAbsent(
 				jdbcUrl,
@@ -141,10 +128,6 @@ public class Databases {
 				}
 		);
 	}
-
-//	public static Connection connection(String jdbcUrl) throws SQLException {
-//		return dataSource(jdbcUrl).getConnection();
-//	}
 
 	private static Connection connection(String jdbcUrl) {
 		return threadConnections.computeIfAbsent(

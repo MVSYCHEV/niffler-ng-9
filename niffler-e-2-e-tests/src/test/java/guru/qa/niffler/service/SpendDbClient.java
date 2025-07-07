@@ -5,8 +5,8 @@ import guru.qa.niffler.data.dao.impl.CategoryDaoJdbc;
 import guru.qa.niffler.data.dao.impl.SpendDaoJdbc;
 import guru.qa.niffler.data.entity.spend.CategoryEntity;
 import guru.qa.niffler.data.entity.spend.SpendEntity;
-import guru.qa.niffler.model.CategoryJson;
-import guru.qa.niffler.model.SpendJson;
+import guru.qa.niffler.model.spend.CategoryJson;
+import guru.qa.niffler.model.spend.SpendJson;
 
 import java.util.List;
 import java.util.Optional;

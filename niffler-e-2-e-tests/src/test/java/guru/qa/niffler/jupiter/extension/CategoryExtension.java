@@ -3,7 +3,7 @@ package guru.qa.niffler.jupiter.extension;
 import guru.qa.niffler.data.entity.spend.CategoryEntity;
 import guru.qa.niffler.jupiter.annotation.Category;
 import guru.qa.niffler.jupiter.annotation.meta.User;
-import guru.qa.niffler.model.CategoryJson;
+import guru.qa.niffler.model.spend.CategoryJson;
 import guru.qa.niffler.service.SpendDbClient;
 import guru.qa.niffler.utils.RandomDataUtils;
 import org.junit.jupiter.api.extension.*;
