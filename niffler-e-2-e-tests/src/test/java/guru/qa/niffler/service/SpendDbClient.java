@@ -8,6 +8,7 @@ import guru.qa.niffler.data.entity.spend.SpendEntity;
 import guru.qa.niffler.model.spend.CategoryJson;
 import guru.qa.niffler.model.spend.SpendJson;
 
+import java.sql.Connection;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -30,7 +31,8 @@ public class SpendDbClient {
 							new SpendDaoJdbc(connection).create(spendEntity)
 					);
 				},
-				CFG.spendJdbcUrl()
+				CFG.spendJdbcUrl(),
+				Connection.TRANSACTION_READ_UNCOMMITTED
 		);
 	}
 
@@ -44,7 +46,8 @@ public class SpendDbClient {
 					}
 					return spendJson;
 				},
-				CFG.spendJdbcUrl()
+				CFG.spendJdbcUrl(),
+				Connection.TRANSACTION_READ_UNCOMMITTED
 		);
 	}
 
@@ -55,7 +58,8 @@ public class SpendDbClient {
 							.map(entity -> SpendJson.fromEntity(entity))
 							.collect(Collectors.toList());
 				},
-				CFG.spendJdbcUrl()
+				CFG.spendJdbcUrl(),
+				Connection.TRANSACTION_READ_UNCOMMITTED
 		);
 	}
 
@@ -63,7 +67,8 @@ public class SpendDbClient {
 		transaction(connection -> {
 					new SpendDaoJdbc(connection).deleteSpend(spend);
 				},
-				CFG.spendJdbcUrl()
+				CFG.spendJdbcUrl(),
+				Connection.TRANSACTION_READ_UNCOMMITTED
 		);
 	}
 
@@ -72,7 +77,8 @@ public class SpendDbClient {
 					CategoryEntity categoryEntity = CategoryEntity.fromJson(categoryJson);
 					return CategoryJson.fromEntity(new CategoryDaoJdbc(connection).create(categoryEntity));
 				},
-				CFG.spendJdbcUrl()
+				CFG.spendJdbcUrl(),
+				Connection.TRANSACTION_READ_UNCOMMITTED
 		);
 	}
 
@@ -86,7 +92,8 @@ public class SpendDbClient {
 					}
 					return categoryJson;
 				},
-				CFG.spendJdbcUrl()
+				CFG.spendJdbcUrl(),
+				Connection.TRANSACTION_READ_UNCOMMITTED
 		);
 	}
 
@@ -97,7 +104,9 @@ public class SpendDbClient {
 							.map(entity -> CategoryJson.fromEntity(entity))
 							.collect(Collectors.toList());
 				},
-				CFG.spendJdbcUrl());
+				CFG.spendJdbcUrl(),
+				Connection.TRANSACTION_READ_UNCOMMITTED
+		);
 	}
 
 	public void deleteCategory(CategoryEntity category) {
@@ -111,6 +120,8 @@ public class SpendDbClient {
 
 					new CategoryDaoJdbc(connection).deleteCategory(category);
 				},
-				CFG.spendJdbcUrl());
+				CFG.spendJdbcUrl(),
+				Connection.TRANSACTION_READ_UNCOMMITTED
+		);
 	}
 }

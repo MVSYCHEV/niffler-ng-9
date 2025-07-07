@@ -14,6 +14,8 @@ import guru.qa.niffler.utils.RandomDataUtils;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.sql.Connection;
+
 public class UserDbClient {
 	private static final Config CFG = Config.getInstance();
 	private static final PasswordEncoder pe = PasswordEncoderFactories.createDelegatingPasswordEncoder();
@@ -37,7 +39,8 @@ public class UserDbClient {
 							new AuthAuthorityDaoJdbc(connection).create(authorityEntity);
 							return null;
 						},
-								CFG.authJdbcUrl()
+								CFG.authJdbcUrl(),
+								Connection.TRANSACTION_READ_UNCOMMITTED
 						),
 						new Databases.XaFunction<>(connection -> {
 							UserDataUserEntity user = new UserDataUserEntity();
@@ -46,7 +49,8 @@ public class UserDbClient {
 							new UserDataUserDaoJdbc(connection).createUser(user);
 							return user;
 						},
-								CFG.userdataJdbcUrl()
+								CFG.userdataJdbcUrl(),
+								Connection.TRANSACTION_READ_UNCOMMITTED
 						)
 				));
 	}
