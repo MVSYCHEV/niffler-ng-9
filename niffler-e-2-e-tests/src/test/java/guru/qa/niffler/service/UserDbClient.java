@@ -15,6 +15,7 @@ import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.sql.Connection;
+import java.util.Arrays;
 
 public class UserDbClient {
 	private static final Config CFG = Config.getInstance();
@@ -33,10 +34,16 @@ public class UserDbClient {
 							authUserEntity.setAccountNonLocked(true);
 							new AuthUserDaoJdbc(connection).create(authUserEntity);
 
-							AuthorityEntity authorityEntity = new AuthorityEntity();
-							authorityEntity.setAuthority(Authority.read);
-							authorityEntity.setUserId(authUserEntity.getId());
-							new AuthAuthorityDaoJdbc(connection).create(authorityEntity);
+							new AuthAuthorityDaoJdbc(connection).create(
+									Arrays.stream(Authority.values())
+											.map(a -> {
+														AuthorityEntity ae = new AuthorityEntity();
+														ae.setAuthority(a);
+														ae.setUserId(authUserEntity.getId());
+														return ae;
+													}
+											).toArray(AuthorityEntity[]::new));
+
 							return null;
 						},
 								CFG.authJdbcUrl(),
