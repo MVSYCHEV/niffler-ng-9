@@ -6,7 +6,7 @@ import guru.qa.niffler.jupiter.annotation.DisabledByIssue;
 import guru.qa.niffler.jupiter.annotation.Spending;
 import guru.qa.niffler.jupiter.annotation.meta.User;
 import guru.qa.niffler.jupiter.annotation.meta.WebTest;
-import guru.qa.niffler.model.SpendJson;
+import guru.qa.niffler.model.spend.SpendJson;
 import guru.qa.niffler.page.LoginPage;
 import org.junit.jupiter.api.Test;
 
@@ -15,11 +15,11 @@ public class SpendingTest {
 	private static final Config CFG = Config.getInstance();
 
 	@User(
-			username = "sychevTest",
+			username = "sychevTest", // TODO Добавить генерацию рандомного юзера с новой категорией
 			spends = @Spending(
 					amount = 89990.00,
 					description = "New Category",
-					category = "categoryNameRandom" // TODO Здесь нельзя запустить тест 2 раза с одинаковым именем т.к. в БД нельзя добавить существующую категорию
+					category = "categoryNameRandom"
 			))
 	@DisabledByIssue("3")
 	@Test

@@ -1,7 +1,7 @@
 package guru.qa.niffler.data.entity.userdata;
 
-import guru.qa.niffler.model.CurrencyValues;
-import guru.qa.niffler.model.UserJson;
+import guru.qa.niffler.model.spend.CurrencyValues;
+import guru.qa.niffler.model.userdata.UserJson;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -11,7 +11,7 @@ import java.util.UUID;
 
 @Getter
 @Setter
-public class UserEntity implements Serializable {
+public class UserDataUserEntity implements Serializable {
 	private UUID id;
 	private String username;
 	private CurrencyValues currency;
@@ -21,8 +21,8 @@ public class UserEntity implements Serializable {
 	private byte[] photo;
 	private byte[] photoSmall;
 
-	public static UserEntity fromJson(UserJson json) {
-		UserEntity user = new UserEntity();
+	public static UserDataUserEntity fromJson(UserJson json) {
+		UserDataUserEntity user = new UserDataUserEntity();
 		user.setId(json.id());
 		user.setUsername(json.username());
 		user.setCurrency(json.currency());

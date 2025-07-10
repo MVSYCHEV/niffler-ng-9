@@ -3,7 +3,7 @@ package guru.qa.niffler.jupiter.extension;
 import guru.qa.niffler.data.entity.spend.CategoryEntity;
 import guru.qa.niffler.jupiter.annotation.Category;
 import guru.qa.niffler.jupiter.annotation.meta.User;
-import guru.qa.niffler.model.CategoryJson;
+import guru.qa.niffler.model.spend.CategoryJson;
 import guru.qa.niffler.service.SpendDbClient;
 import guru.qa.niffler.utils.RandomDataUtils;
 import org.junit.jupiter.api.extension.*;
@@ -60,13 +60,9 @@ public class CategoryExtension implements BeforeEachCallback, ParameterResolver,
 				User.class
 		).ifPresent(
 				annotations -> {
-					if (annotations.categories().length != 0) {
-						CategoryJson createdCategory = (CategoryJson) context.getStore(NAMESPACE).get(context.getUniqueId());
-						if (createdCategory != null) {
-							spendDbClient.deleteCategory(CategoryEntity.fromJson(createdCategory));
-						} else if (annotations.categories().length == 0 && annotations.spends().length != 0) {
-							spendDbClient.createCategory(defaultCategoryWithName(annotations.username(), annotations.spends()[0].category()));
-						}
+					if (annotations.categories().length != 0 || annotations.spends()[0].category() != null) {
+						CategoryJson createdCategory = createdCategory();
+						spendDbClient.deleteCategory(CategoryEntity.fromJson(createdCategory));
 					}
 				});
 	}
