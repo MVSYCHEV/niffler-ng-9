@@ -11,10 +11,13 @@ import guru.qa.niffler.data.entity.auth.AuthUserEntity;
 import guru.qa.niffler.data.entity.auth.Authority;
 import guru.qa.niffler.data.entity.auth.AuthorityEntity;
 import guru.qa.niffler.data.entity.userdata.UserDataUserEntity;
+import guru.qa.niffler.data.tpl.DataSources;
 import guru.qa.niffler.data.tpl.XaTransactionTemplate;
 import guru.qa.niffler.model.userdata.UserJson;
+import org.springframework.jdbc.support.JdbcTransactionManager;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.transaction.support.TransactionTemplate;
 
 import java.util.Arrays;
 
@@ -25,6 +28,15 @@ public class UserDbClient {
 	private final AuthUserDao authUserDao = new AuthUserDaoSpringJdbc();
 	private final AuthAuthorityDao authAuthorityDao = new AuthAuthorityDaoSpringJdbc();
 	private final UserDataUserDao udUserDao = new UserDataUserDaoSpringJdbc();
+
+	/**
+	 Стандартный механизм создания spring-транзакций, но не будет работать с обычным JDBC
+	 */
+	private final TransactionTemplate txTemplate = new TransactionTemplate(
+			new JdbcTransactionManager(
+					DataSources.dataSource(CFG.authJdbcUrl())
+			)
+	);
 
 	private final XaTransactionTemplate xaTransactionTemplate = new XaTransactionTemplate(
 			CFG.authJdbcUrl(),
