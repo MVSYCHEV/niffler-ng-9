@@ -11,7 +11,7 @@ public class UserDbTest {
 	void checkCreatingUser() {
 		UserJson userJson = new UserJson(
 				null,
-				"Sychev Test AX-3",
+				"Sychev Test AX-5",
 				"Sychev",
 				"Test",
 				null,
@@ -19,6 +19,7 @@ public class UserDbTest {
 				null,
 				null
 		);
+
 		UserDbClient dbClient = new UserDbClient();
 		dbClient.createUser(userJson);
 	}

@@ -1,7 +1,9 @@
 package guru.qa.niffler.data.dao.impl;
 
+import guru.qa.niffler.config.Config;
 import guru.qa.niffler.data.dao.AuthUserDao;
 import guru.qa.niffler.data.entity.auth.AuthUserEntity;
+import guru.qa.niffler.data.tpl.Connections;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
@@ -13,15 +15,11 @@ import java.util.UUID;
 
 public class AuthUserDaoJdbc implements AuthUserDao {
 	private static final PasswordEncoder pe = PasswordEncoderFactories.createDelegatingPasswordEncoder();
-	private final Connection connection;
-
-	public AuthUserDaoJdbc(Connection connection) {
-		this.connection = connection;
-	}
+	private static final Config CFG = Config.getInstance();
 
 	@Override
 	public AuthUserEntity create(AuthUserEntity user) {
-		try (PreparedStatement preparedStatement = connection.prepareStatement(
+		try (PreparedStatement preparedStatement = Connections.holder(CFG.authJdbcUrl()).connection().prepareStatement(
 				"INSERT INTO \"user\" (username, password, enabled, account_non_expired, account_non_locked, credentials_non_expired) " +
 						"VALUES ( ?, ?, ?, ?, ?, ?)",
 				Statement.RETURN_GENERATED_KEYS
@@ -52,7 +50,7 @@ public class AuthUserDaoJdbc implements AuthUserDao {
 
 	@Override
 	public Optional<AuthUserEntity> findById(UUID id) {
-		try (PreparedStatement ps = connection.prepareStatement("SELECT * FROM \"user\" WHERE id = ?")) {
+		try (PreparedStatement ps = Connections.holder(CFG.authJdbcUrl()).connection().prepareStatement("SELECT * FROM \"user\" WHERE id = ?")) {
 			ps.setObject(1, id);
 
 			ps.execute();
@@ -80,7 +78,7 @@ public class AuthUserDaoJdbc implements AuthUserDao {
 	@Override
 	public List<AuthUserEntity> findAll() {
 		List<AuthUserEntity> authUserEntities = new ArrayList<>();
-		try ( PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM \"user\"")) {
+		try ( PreparedStatement preparedStatement = Connections.holder(CFG.authJdbcUrl()).connection().prepareStatement("SELECT * FROM \"user\"")) {
 			preparedStatement.execute();
 
 			try (ResultSet resultSet = preparedStatement.getResultSet()) {
