@@ -109,14 +109,15 @@ public class SpendDbClient {
 	}
 
 	public void deleteCategory(CategoryEntity category) {
+		String username = category.getUsername();
+		UUID categoryId = category.getId();
+
+		List<SpendJson> spends = getSpends(username);
+		spends.stream()
+				.filter(spendJson -> spendJson.category().id().equals(categoryId))
+				.forEach(spendJson -> deleteSpend(SpendEntity.fromJson(spendJson)));
+
 		jdbcTxTemplate.execute(() -> {
-					String username = category.getUsername();
-					UUID categoryId = category.getId();
-
-					getSpends(username).stream()
-							.filter(spendJson -> spendJson.category().id().equals(categoryId))
-							.forEach(spendJson -> spendDao.deleteSpend(SpendEntity.fromJson(spendJson)));
-
 					categoryDao.deleteCategory(category);
 					return null;
 				}

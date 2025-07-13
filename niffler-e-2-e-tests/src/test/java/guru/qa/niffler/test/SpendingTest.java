@@ -15,11 +15,11 @@ public class SpendingTest {
 	private static final Config CFG = Config.getInstance();
 
 	@User(
-			username = "sychevTest",
+			username = "sychevTest", // TODO Добавить генерацию рандомного юзера с новой категорией
 			spends = @Spending(
 					amount = 89990.00,
 					description = "New Category",
-					category = "categoryNameRandom" // TODO Здесь нельзя запустить тест 2 раза с одинаковым именем т.к. в БД нельзя добавить существующую категорию
+					category = "categoryNameRandom"
 			))
 	@DisabledByIssue("3")
 	@Test
