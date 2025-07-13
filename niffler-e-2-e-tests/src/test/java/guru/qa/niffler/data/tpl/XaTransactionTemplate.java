@@ -7,6 +7,9 @@ import jakarta.transaction.UserTransaction;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Supplier;
 
+/**
+ * Работает и для обычных DAO и для SpringDao
+ */
 public class XaTransactionTemplate {
 	private final JdbcConnectionHolders holders;
 	private final AtomicBoolean closeAfterAction = new AtomicBoolean(true);

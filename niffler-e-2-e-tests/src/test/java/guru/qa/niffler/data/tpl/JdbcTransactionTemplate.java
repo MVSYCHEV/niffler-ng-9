@@ -7,6 +7,9 @@ import java.util.function.Supplier;
 
 import static java.sql.Connection.TRANSACTION_READ_COMMITTED;
 
+/**
+ * Работает для обычных DAO (не Spring)
+ */
 public class JdbcTransactionTemplate {
 	private final JdbcConnectionHolder holder;
 	private final AtomicBoolean closeAfterAction = new AtomicBoolean(true);
