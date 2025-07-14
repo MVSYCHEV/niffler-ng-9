@@ -19,7 +19,7 @@ public class AuthorityEntityRowMapper implements RowMapper<AuthorityEntity> {
 		AuthorityEntity authorityEntity = new AuthorityEntity();
 		authorityEntity.setId(rs.getObject("id", UUID.class));
 		authorityEntity.setUserId(rs.getObject("user_id", UUID.class));
-		authorityEntity.setAuthority(rs.getObject("authority", Authority.class));
+		authorityEntity.setAuthority(Authority.valueOf(rs.getString("authority")));
 		return authorityEntity;
 	}
 }
