@@ -11,7 +11,7 @@ public class UserDbTest {
 	void checkCreatingUser() {
 		UserJson userJson = new UserJson(
 				null,
-				"Sychev Test AX-5",
+				"Sychev Test AX-8",
 				"Sychev",
 				"Test",
 				null,
