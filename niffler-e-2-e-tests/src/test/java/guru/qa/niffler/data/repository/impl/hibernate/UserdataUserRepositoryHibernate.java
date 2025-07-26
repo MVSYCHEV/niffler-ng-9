@@ -1,4 +1,4 @@
-package guru.qa.niffler.data.repository.impl;
+package guru.qa.niffler.data.repository.impl.hibernate;
 
 import guru.qa.niffler.config.Config;
 import guru.qa.niffler.data.entity.userdata.FriendshipStatus;
@@ -13,10 +13,7 @@ import java.util.UUID;
 import static guru.qa.niffler.data.jpa.EntityManagers.em;
 
 public class UserdataUserRepositoryHibernate implements UserDataUserRepository {
-
-	private static final Config CFG = Config.getInstance();
-
-	private final EntityManager entityManager = em(CFG.userdataJdbcUrl());
+	private final EntityManager entityManager = em(Config.getInstance().userdataJdbcUrl());
 
 	@Override
 	public UserEntity create(UserEntity user) {
@@ -46,13 +43,13 @@ public class UserdataUserRepositoryHibernate implements UserDataUserRepository {
 	}
 
 	@Override
-	public void addIncomeInvitation(UserEntity requester, UserEntity addressee) {
+	public UserEntity update(UserEntity user) {
 		entityManager.joinTransaction();
-		addressee.addFriends(FriendshipStatus.PENDING, requester);
+		return entityManager.merge(user);
 	}
 
 	@Override
-	public void addOutcomeInvitation(UserEntity requester, UserEntity addressee) {
+	public void sendInvitation(UserEntity requester, UserEntity addressee) {
 		entityManager.joinTransaction();
 		requester.addFriends(FriendshipStatus.PENDING, addressee);
 	}
@@ -62,5 +59,12 @@ public class UserdataUserRepositoryHibernate implements UserDataUserRepository {
 		entityManager.joinTransaction();
 		requester.addFriends(FriendshipStatus.ACCEPTED, addressee);
 		addressee.addFriends(FriendshipStatus.ACCEPTED, requester);
+	}
+
+	@Override
+	public void remove(UserEntity user) {
+		entityManager.joinTransaction();
+		UserEntity attachedUser = entityManager.merge(user);
+		entityManager.remove(attachedUser);
 	}
 }

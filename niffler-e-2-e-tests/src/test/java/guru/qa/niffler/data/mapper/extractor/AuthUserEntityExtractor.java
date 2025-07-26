@@ -44,24 +44,9 @@ public class AuthUserEntityExtractor implements ResultSetExtractor<AuthUserEntit
 			AuthorityEntity authority = new AuthorityEntity();
 			authority.setId(rs.getObject("authority_id", UUID.class));
 			authority.setAuthority(Authority.valueOf(rs.getString("authority")));
+			authority.setUser(user);
 			user.getAuthorities().add(authority);
 		}
 		return userMap.get(userId);
 	}
-
-//	public AuthUserEntity extractData(ResultSet rs) throws SQLException, DataAccessException {
-//		Map<UUID, AuthUserEntity> userMap = new ConcurrentHashMap<>();
-//		UUID userId = null;
-//
-//		while (rs.next()) {
-//			userId = rs.getObject("id", UUID.class);
-//
-//			AuthUserEntity user = userMap.computeIfAbsent(userId, id -> {…});
-//			AuthorityEntity authority = new AuthorityEntity();
-//			authority.setId(rs.getObject("authority_id", UUID.class));
-//			authority.setAuthority(Authority.valueOf(rs.getString("authority")));
-//			user.getAuthorities().add(authority);
-//		}
-//		return userMap.get(userId);
-//	}
 }

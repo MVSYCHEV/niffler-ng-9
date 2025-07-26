@@ -1,4 +1,4 @@
-package guru.qa.niffler.data.dao.impl;
+package guru.qa.niffler.data.dao.impl.jdbc;
 
 import guru.qa.niffler.config.Config;
 import guru.qa.niffler.data.dao.SpendDao;
@@ -7,10 +7,7 @@ import guru.qa.niffler.data.entity.spend.SpendEntity;
 import guru.qa.niffler.data.tpl.Connections;
 import guru.qa.niffler.model.spend.CurrencyValues;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -48,6 +45,23 @@ public class SpendDaoJdbc implements SpendDao {
 		} catch (SQLException e) {
 			throw new RuntimeException(e);
 		}
+	}
+
+	@Override
+	public SpendEntity update(SpendEntity spend) {
+		try (PreparedStatement ps = Connections.holder(CFG.spendJdbcUrl()).connection().prepareStatement(
+				"UPDATE \"spend\" SET spend_date = ?, currency = ?, amount = ?, description = ? WHERE id = ?");
+		) {
+			ps.setDate(1, new Date(spend.getSpendDate().getTime()));
+			ps.setString(2, spend.getCurrency().name());
+			ps.setDouble(3, spend.getAmount());
+			ps.setString(4, spend.getDescription());
+			ps.setObject(5, spend.getId());
+			ps.executeUpdate();
+		} catch (SQLException e) {
+			throw new RuntimeException(e);
+		}
+		return spend;
 	}
 
 	@Override
@@ -119,6 +133,46 @@ public class SpendDaoJdbc implements SpendDao {
 				}
 			}
 			return allSpends;
+		} catch (SQLException e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	@Override
+	public Optional<SpendEntity> findByUsernameAndSpendDescription(String username, String description) {
+		try (PreparedStatement ps = Connections.holder(CFG.spendJdbcUrl()).connection().prepareStatement(
+				"SELECT s.*, c.* " +
+						"FROM spend s " +
+						"JOIN category c ON s.category_id = c.id " +
+						"WHERE s.username = ? AND s.description = ?"
+		)) {
+			ps.setObject(1, username);
+			ps.setObject(2, description);
+			ps.execute();
+			try (ResultSet resultSet = ps.getResultSet()) {
+				if (resultSet.next()) {
+					SpendEntity spendEntity = new SpendEntity();
+					spendEntity.setId(spendEntity.getId());
+					spendEntity.setUsername(username);
+
+					String currencyStr = resultSet.getString("currency");
+					CurrencyValues currency = CurrencyValues.valueOf(currencyStr);
+					spendEntity.setCurrency(currency);
+
+					spendEntity.setAmount(resultSet.getDouble("amount"));
+					spendEntity.setDescription(description);
+					spendEntity.setSpendDate(resultSet.getDate("spend_date"));
+
+					UUID categoryId = resultSet.getObject("category_id", UUID.class);
+					CategoryEntity category = new CategoryEntity();
+					category.setId(categoryId);
+					spendEntity.setCategory(category);
+
+					return Optional.of(spendEntity);
+				} else {
+					return Optional.empty();
+				}
+			}
 		} catch (SQLException e) {
 			throw new RuntimeException(e);
 		}

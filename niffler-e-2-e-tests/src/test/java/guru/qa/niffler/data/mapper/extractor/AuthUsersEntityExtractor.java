@@ -45,6 +45,7 @@ public class AuthUsersEntityExtractor implements ResultSetExtractor<List<AuthUse
 			AuthorityEntity authority = new AuthorityEntity();
 			authority.setId(rs.getObject("authority_id", UUID.class));
 			authority.setAuthority(Authority.valueOf(rs.getString("authority")));
+			authority.setUser(user);
 			user.getAuthorities().add(authority);
 		}
 		return userMap.values().stream().toList();

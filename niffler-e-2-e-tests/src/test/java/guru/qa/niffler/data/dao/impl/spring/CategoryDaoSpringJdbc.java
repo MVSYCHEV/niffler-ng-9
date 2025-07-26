@@ -1,10 +1,11 @@
-package guru.qa.niffler.data.dao.impl;
+package guru.qa.niffler.data.dao.impl.spring;
 
 import guru.qa.niffler.config.Config;
 import guru.qa.niffler.data.dao.CategoryDao;
 import guru.qa.niffler.data.entity.spend.CategoryEntity;
 import guru.qa.niffler.data.mapper.CategoryEntityRowMapper;
 import guru.qa.niffler.data.tpl.DataSources;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
@@ -42,27 +43,46 @@ public class CategoryDaoSpringJdbc implements CategoryDao {
 	}
 
 	@Override
+	public CategoryEntity update(CategoryEntity category) {
+		JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(CFG.spendJdbcUrl()));
+		jdbcTemplate.update("UPDATE category SET name = ?, archived = ? WHERE id = ?",
+				category.getName(),
+				category.isArchived(),
+				category.getId()
+		);
+		return category;
+	}
+
+	@Override
 	public Optional<CategoryEntity> findById(UUID id) {
 		JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(CFG.spendJdbcUrl()));
-		return Optional.ofNullable(
-				jdbcTemplate.queryForObject(
-						"SELECT * FROM category WHERE id = ?",
-						CategoryEntityRowMapper.instance,
-						id
-				)
-		);
+		try {
+			return Optional.of(
+					jdbcTemplate.queryForObject(
+							"SELECT * FROM category WHERE id = ?",
+							CategoryEntityRowMapper.instance,
+							id
+					)
+			);
+		} catch (EmptyResultDataAccessException e) {
+			return Optional.empty();
+		}
 	}
 
 	@Override
 	public Optional<CategoryEntity> findByUsernameAndCategoryName(String username, String categoryName) {
 		JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(CFG.spendJdbcUrl()));
-		return Optional.ofNullable(
-				jdbcTemplate.queryForObject(
-						"SELECT * FROM category WHERE username = ? AND name = ?",
-						CategoryEntityRowMapper.instance,
-						username, categoryName
-				)
-		);
+		try {
+			return Optional.of(
+					jdbcTemplate.queryForObject(
+							"SELECT * FROM category WHERE username = ? AND name = ?",
+							CategoryEntityRowMapper.instance,
+							username, categoryName
+					)
+			);
+		} catch (EmptyResultDataAccessException e) {
+			return Optional.empty();
+		}
 	}
 
 	@Override

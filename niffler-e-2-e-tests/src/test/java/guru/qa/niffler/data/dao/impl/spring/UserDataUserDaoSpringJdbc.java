@@ -1,4 +1,4 @@
-package guru.qa.niffler.data.dao.impl;
+package guru.qa.niffler.data.dao.impl.spring;
 
 import guru.qa.niffler.config.Config;
 import guru.qa.niffler.data.dao.UserDataUserDao;
@@ -46,7 +46,7 @@ public class UserDataUserDaoSpringJdbc implements UserDataUserDao {
 	@Override
 	public Optional<UserEntity> findById(UUID id) {
 		JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(CFG.userdataJdbcUrl()));
-		return Optional.ofNullable(
+		return Optional.of(
 				jdbcTemplate.queryForObject(
 						"SELECT * FROM \"user\" WHERE id = ?",
 						UserDataUserEntityRowMapper.instance,
@@ -58,7 +58,7 @@ public class UserDataUserDaoSpringJdbc implements UserDataUserDao {
 	@Override
 	public Optional<UserEntity> findByUsername(String username) {
 		JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(CFG.userdataJdbcUrl()));
-		return Optional.ofNullable(
+		return Optional.of(
 				jdbcTemplate.queryForObject(
 						"SELECT * FROM \"user\" WHERE username = ?",
 						UserDataUserEntityRowMapper.instance,

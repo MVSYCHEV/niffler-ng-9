@@ -1,4 +1,4 @@
-package guru.qa.niffler.data.dao.impl;
+package guru.qa.niffler.data.dao.impl.spring;
 
 import guru.qa.niffler.config.Config;
 import guru.qa.niffler.data.dao.AuthAuthorityDao;
@@ -19,7 +19,7 @@ public class AuthAuthorityDaoSpringJdbc implements AuthAuthorityDao {
 	public void create(AuthorityEntity... authority) {
 		JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(CFG.authJdbcUrl()));
 		jdbcTemplate.batchUpdate(
-				"INSERT INTO authority (user_id, authority) VALUES (? , ?)",
+				"INSERT INTO authority (user_id, authority) VALUES (?, ?)",
 				new BatchPreparedStatementSetter() {
 					@Override
 					public void setValues(PreparedStatement ps, int i) throws SQLException {
