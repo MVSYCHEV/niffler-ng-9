@@ -4,7 +4,6 @@ import guru.qa.niffler.model.auth.AuthUserJson;
 import guru.qa.niffler.model.userdata.UserJson;
 import guru.qa.niffler.service.UserClient;
 import guru.qa.niffler.service.impl.UserDbClient;
-import guru.qa.niffler.utils.RandomDataUtils;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -16,7 +15,7 @@ public class UserDbTest {
 	// Sychev Test Hibernate
 	// Sychev Test Jdbc
 	// Sychev Test SpringJdbc
-	private final String name = "Sychev Test SpringJdbc 2";
+	private final String name = "Sychev Test SpringJdbc 3";
 
 	@Test
 	void checkCreatingUser() {
@@ -69,7 +68,9 @@ public class UserDbTest {
 				user.fullname(),
 				user.currency(),
 				user.photo(),
-				user.photoSmall()
+				user.photoSmall(),
+				null,
+				null
 		);
 		UserJson receivedUser = userClient.update(updatedUser);
 		System.out.println(receivedUser);
@@ -84,21 +85,21 @@ public class UserDbTest {
 		Assertions.assertEquals(name, userById.username());
 	}
 
-	@Test // TODO Не работает с Hibernate (хотя тест зеленый, но данные не попадают в базу)
-	void checkSendInvitation() {
-		UserJson requester = userClient.createUser(RandomDataUtils.randomUserName(), "12345");
-		UserJson addressee = userClient.createUser(RandomDataUtils.randomUserName(), "12345");
-		userClient.sendFriendInvitation(requester, addressee);
-		// Можно проверить визуально или заглянуть в базу, должна быть строчка с PENDING
-	}
-
-	@Test // TODO Не работает с Hibernate (хотя тест зеленый, но данные не попадают в базу)
-	void checkAddFriend() {
-		UserJson requester = userClient.createUser(RandomDataUtils.randomUserName(), "12345");
-		UserJson addressee = userClient.createUser(RandomDataUtils.randomUserName(), "12345");
-		userClient.addFriend(requester, addressee);
-		// Можно проверить визуально или заглянуть в базу, должны быть две строчки с ACCEPTED
-	}
+//	@Test // TODO Не работает с Hibernate (хотя тест зеленый, но данные не попадают в базу)
+//	void checkSendInvitation() {
+//		UserJson requester = userClient.createUser(RandomDataUtils.randomUserName(), "12345");
+//		UserJson addressee = userClient.createUser(RandomDataUtils.randomUserName(), "12345");
+//		userClient.sendFriendInvitation(requester, addressee);
+//		// Можно проверить визуально или заглянуть в базу, должна быть строчка с PENDING
+//	}
+//
+//	@Test // TODO Не работает с Hibernate (хотя тест зеленый, но данные не попадают в базу)
+//	void checkAddFriend() {
+//		UserJson requester = userClient.createUser(RandomDataUtils.randomUserName(), "12345");
+//		UserJson addressee = userClient.createUser(RandomDataUtils.randomUserName(), "12345");
+//		userClient.addFriend(requester, addressee);
+//		// Можно проверить визуально или заглянуть в базу, должны быть две строчки с ACCEPTED
+//	}
 
 	@Test
 	void removeUser() {

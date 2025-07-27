@@ -23,9 +23,11 @@ public interface UserClient {
 
 	UserJson getUserByName(String username);
 
-	void sendFriendInvitation(UserJson requester, UserJson addressee);
+	List<UserJson> addIncomeInvitation(UserJson targetUser, int count);
 
-	void addFriend(UserJson requester, UserJson addressee);
+	List<UserJson> addOutcomeInvitation(UserJson targetUser, int count);
+
+	List<UserJson> addFriend(UserJson targetUser, int count);
 
 	void removeUser(AuthUserJson authUserJson);
 }

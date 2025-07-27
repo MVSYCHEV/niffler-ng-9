@@ -46,7 +46,8 @@ public class UserDataRepositorySpringJdbc implements UserDataUserRepository {
 
 		FriendshipEntity[] friendshipEntities = user.getFriendshipRequests().toArray(new FriendshipEntity[0]);
 		jdbcTemplate.batchUpdate(
-				"INSERT INTO friendship (requester_id, addressee_id, status) VALUES (?, ?, ?)",
+				"INSERT INTO friendship (requester_id, addressee_id, status) VALUES (?, ?, ?) " +
+						"ON CONFLICT (requester_id, addressee_id) DO UPDATE SET status = ?",
 				new BatchPreparedStatementSetter() {
 					@Override
 					public void setValues(PreparedStatement ps, int i) throws SQLException {
