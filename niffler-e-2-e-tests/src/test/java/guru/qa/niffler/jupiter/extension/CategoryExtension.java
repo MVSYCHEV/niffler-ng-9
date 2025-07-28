@@ -1,10 +1,10 @@
 package guru.qa.niffler.jupiter.extension;
 
-import guru.qa.niffler.api.SpendApiClient;
 import guru.qa.niffler.jupiter.annotation.Category;
 import guru.qa.niffler.jupiter.annotation.meta.User;
 import guru.qa.niffler.model.spend.CategoryJson;
 import guru.qa.niffler.model.userdata.UserJson;
+import guru.qa.niffler.service.impl.SpendApiClient;
 import org.apache.commons.lang3.ArrayUtils;
 import org.junit.jupiter.api.extension.*;
 import org.junit.platform.commons.support.AnnotationSupport;
@@ -34,24 +34,27 @@ public class CategoryExtension implements
 
 						final List<CategoryJson> result = new ArrayList<>();
 						for (Category categoryAnno : userAnno.categories()) {
-							CategoryJson category = new CategoryJson(
-									null,
-									randomCategoryName(),
-									userAnno.username(),
-									categoryAnno.isArchived()
-							);
-
-							CategoryJson created = spendApiClient.addCategory(category);
-							if (categoryAnno.isArchived()) {
-								CategoryJson archivedCategory = new CategoryJson(
-										created.id(),
-										created.name(),
-										created.username(),
-										true
+							final String username = createdUser != null ? createdUser.username() : userAnno.username();
+							if (!"".equals(username)) {
+								CategoryJson category = new CategoryJson(
+										null,
+										randomCategoryName(),
+										username,
+										categoryAnno.isArchived()
 								);
-								created = spendApiClient.updateCategory(archivedCategory);
+
+								CategoryJson created = spendApiClient.create(category);
+								if (categoryAnno.isArchived()) {
+									CategoryJson archivedCategory = new CategoryJson(
+											created.id(),
+											created.name(),
+											created.username(),
+											true
+									);
+									created = spendApiClient.update(archivedCategory);
+								}
+								result.add(created);
 							}
-							result.add(created);
 						}
 
 						if (createdUser != null) {
@@ -78,7 +81,7 @@ public class CategoryExtension implements
 							category.username(),
 							true
 					);
-					spendApiClient.updateCategory(category);
+					spendApiClient.update(category);
 				}
 			}
 		}

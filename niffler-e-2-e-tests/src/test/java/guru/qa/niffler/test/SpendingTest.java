@@ -36,4 +36,13 @@ public class SpendingTest {
 				.save()
 				.checkThatTableContainsSpending(newDescription);
 	}
+
+	@Test
+	void checkLostSpends() {
+		Selenide.open(CFG.frontUrl(), LoginPage.class)
+				.fillLoginPage("idell.bayer", "12345")
+				.submit()
+				.checkThatPageLoaded()
+				.checkThatTableContainsSpending("Second Page Descr");
+	}
 }

@@ -4,13 +4,9 @@ import com.codeborne.selenide.Selenide;
 import guru.qa.niffler.config.Config;
 import guru.qa.niffler.jupiter.annotation.meta.User;
 import guru.qa.niffler.jupiter.annotation.meta.WebTest;
-import guru.qa.niffler.jupiter.extension.UsersQueueExtension.StaticUser;
-import guru.qa.niffler.jupiter.extension.UsersQueueExtension.UserType;
 import guru.qa.niffler.model.userdata.UserJson;
 import guru.qa.niffler.page.LoginPage;
 import org.junit.jupiter.api.Test;
-
-import static guru.qa.niffler.jupiter.extension.UsersQueueExtension.Type.*;
 
 @WebTest
 public class FriendsTest {
@@ -33,9 +29,10 @@ public class FriendsTest {
 	}
 
 	@Test
-	void friendTableShouldBeEmptyForNewUser(@UserType() StaticUser user) {
+	@User
+	void friendTableShouldBeEmptyForNewUser(UserJson user) {
 		Selenide.open(CFG.frontUrl(), LoginPage.class)
-				.fillLoginPage(user.username(), user.password())
+				.fillLoginPage(user.username(), user.testData().password())
 				.submit()
 				.checkThatPageLoaded()
 				.openFriends()
@@ -60,13 +57,29 @@ public class FriendsTest {
 	}
 
 	@Test
-	void outcomeInvitationBePresentInAllPeopleTable(@UserType(WITH_OUTCOME_REQUEST) StaticUser user) {
+	@User(
+			outcomeInvitations = 1
+	)
+	void outcomeInvitationBePresentInAllPeopleTable(UserJson user) {
+		final UserJson outcome = user.testData().outcomeInvitations().getFirst();
+
 		Selenide.open(CFG.frontUrl(), LoginPage.class)
-				.fillLoginPage(user.username(), user.password())
+				.fillLoginPage(user.username(), user.testData().password())
 				.submit()
 				.checkThatPageLoaded()
 				.openAllPeople()
 				.checkThatPageLoaded()
-				.checkAllTableHasOutcomeRequestToUser(user.outcome());
+				.checkAllTableHasOutcomeRequestToUser(outcome.username());
+	}
+
+	@Test
+	void checkLotsFriends() {
+		Selenide.open(CFG.frontUrl(), LoginPage.class)
+				.fillLoginPage("idell.bayer", "12345")
+				.submit()
+				.checkThatPageLoaded()
+				.openFriends()
+				.checkThatPageLoaded()
+				.checkFriendByName("phylicia.windler");
 	}
 }

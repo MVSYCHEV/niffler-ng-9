@@ -1,6 +1,6 @@
 package guru.qa.niffler.jupiter.extension;
 
-import guru.qa.niffler.api.SpendApiClient;
+import guru.qa.niffler.service.impl.SpendApiClient;
 import guru.qa.niffler.jupiter.annotation.Spending;
 import guru.qa.niffler.jupiter.annotation.meta.User;
 import guru.qa.niffler.model.spend.CategoryJson;
@@ -48,7 +48,7 @@ public class SpendingExtension implements BeforeEachCallback, ParameterResolver 
 												spendAnno.description(),
 												username
 										);
-										result.add(spendApiClient.addSpend(spendJson));
+										result.add(spendApiClient.create(spendJson));
 									}
 								}
 
