@@ -1,5 +1,6 @@
 package guru.qa.niffler.data.entity.auth;
 
+import guru.qa.niffler.model.auth.AuthUserJson;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -44,6 +45,13 @@ public class AuthUserEntity implements Serializable {
   @OneToMany(fetch = EAGER, cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "user")
   private List<AuthorityEntity> authorities = new ArrayList<>();
 
+  public AuthUserEntity(){}
+
+  public AuthUserEntity(String username, String password) {
+    this.username = username;
+    this.password = password;
+  }
+
   public void addAuthorities(AuthorityEntity... authorities) {
     for (AuthorityEntity authority : authorities) {
       this.authorities.add(authority);
@@ -54,6 +62,18 @@ public class AuthUserEntity implements Serializable {
   public void removeAuthority(AuthorityEntity authority) {
     this.authorities.remove(authority);
     authority.setUser(null);
+  }
+
+  public static AuthUserEntity fromJson(AuthUserJson json) {
+    AuthUserEntity authUserEntity = new AuthUserEntity();
+    authUserEntity.setId(json.id());
+    authUserEntity.setUsername(json.username());
+    authUserEntity.setPassword(json.password());
+    authUserEntity.setEnabled(json.enabled());
+    authUserEntity.setAccountNonLocked(json.accountNonLocked());
+    authUserEntity.setAccountNonExpired(json.accountNonExpired());
+    authUserEntity.setCredentialsNonExpired(json.credentialsNonExpired());
+    return authUserEntity;
   }
 
   @Override
