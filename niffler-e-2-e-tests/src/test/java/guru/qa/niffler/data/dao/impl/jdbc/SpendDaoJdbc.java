@@ -152,7 +152,7 @@ public class SpendDaoJdbc implements SpendDao {
 			try (ResultSet resultSet = ps.getResultSet()) {
 				if (resultSet.next()) {
 					SpendEntity spendEntity = new SpendEntity();
-					spendEntity.setId(spendEntity.getId());
+					spendEntity.setId(resultSet.getObject("id", UUID.class));
 					spendEntity.setUsername(username);
 
 					String currencyStr = resultSet.getString("currency");

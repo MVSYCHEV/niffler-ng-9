@@ -84,7 +84,7 @@ public class UserDbTest {
 		Assertions.assertEquals(name, userById.username());
 	}
 
-	@Test // TODO Не работает с Hibernate (хотя тест зеленый, но данные не попадают в базу)
+	@Test
 	void checkSendInvitation() {
 		UserJson requester = userClient.createUser(RandomDataUtils.randomUserName(), "12345");
 		UserJson addressee = userClient.createUser(RandomDataUtils.randomUserName(), "12345");
@@ -92,7 +92,7 @@ public class UserDbTest {
 		// Можно проверить визуально или заглянуть в базу, должна быть строчка с PENDING
 	}
 
-	@Test // TODO Не работает с Hibernate (хотя тест зеленый, но данные не попадают в базу)
+	@Test
 	void checkAddFriend() {
 		UserJson requester = userClient.createUser(RandomDataUtils.randomUserName(), "12345");
 		UserJson addressee = userClient.createUser(RandomDataUtils.randomUserName(), "12345");
