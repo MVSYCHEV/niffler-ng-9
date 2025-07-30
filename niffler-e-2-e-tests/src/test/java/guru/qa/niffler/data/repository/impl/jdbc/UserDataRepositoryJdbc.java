@@ -40,7 +40,8 @@ public class UserDataRepositoryJdbc implements UserDataUserRepository {
 				"UPDATE \"user\" SET currency = ?, firstname = ?, surname = ?, photo = ?, photo_small = ? " +
 						"WHERE id = ?");
 		     PreparedStatement friendsPs = Connections.holder(CFG.userdataJdbcUrl()).connection().prepareStatement(
-				     "INSERT INTO friendship (requester_id, addressee_id, status) VALUES (?, ?, ?)"
+				     "INSERT INTO friendship (requester_id, addressee_id, status) VALUES (?, ?, ?) " +
+						     "ON CONFLICT (requester_id, addressee_id) DO UPDATE SET status = ?"
 		)) {
 			usersPs.setString(1, user.getCurrency().name());
 			usersPs.setString(2, user.getFirstname());

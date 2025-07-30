@@ -17,23 +17,23 @@ public class ProfileTest {
 
 	@User(username = name, categories = @Category(isArchived = true))
 	@Test
-	void archivedCategoryShouldPresentInCategoriesList(CategoryJson category) {
+	void archivedCategoryShouldPresentInCategoriesList(CategoryJson[] categoryJson) {
 		Selenide.open(CFG.frontUrl(), LoginPage.class)
 				.fillLoginPage(Users.SYCHEV_TEST_USER_NAME, Users.SYCHEV_TEST_USER_PASSWORD)
 				.submit()
 				.checkThatPageLoaded()
 				.openProfile()
-				.findArchiveCategory(category.name());
+				.findArchiveCategory(categoryJson[0].name());
 	}
 
 	@User(username = name, categories = @Category())
 	@Test
-	void activeCategoryShouldPresentInCategoriesList(CategoryJson category) {
+	void activeCategoryShouldPresentInCategoriesList(CategoryJson[] categoryJson) {
 		Selenide.open(CFG.frontUrl(), LoginPage.class)
 				.fillLoginPage(Users.SYCHEV_TEST_USER_NAME, Users.SYCHEV_TEST_USER_PASSWORD)
 				.submit()
 				.checkThatPageLoaded()
 				.openProfile()
-				.findActiveCategory(category.name());
+				.findActiveCategory(categoryJson[0].name());
 	}
 }

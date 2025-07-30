@@ -16,7 +16,7 @@ public class UserDbTest {
 	// Sychev Test Hibernate
 	// Sychev Test Jdbc
 	// Sychev Test SpringJdbc
-	private final String name = "Sychev Test SpringJdbc 2";
+	private final String name = "Sychev Test SpringJdbc 3";
 
 	@Test
 	void checkCreatingUser() {
@@ -69,7 +69,9 @@ public class UserDbTest {
 				user.fullname(),
 				user.currency(),
 				user.photo(),
-				user.photoSmall()
+				user.photoSmall(),
+				null,
+				null
 		);
 		UserJson receivedUser = userClient.update(updatedUser);
 		System.out.println(receivedUser);
@@ -87,16 +89,14 @@ public class UserDbTest {
 	@Test
 	void checkSendInvitation() {
 		UserJson requester = userClient.createUser(RandomDataUtils.randomUserName(), "12345");
-		UserJson addressee = userClient.createUser(RandomDataUtils.randomUserName(), "12345");
-		userClient.sendFriendInvitation(requester, addressee);
+		userClient.addIncomeInvitation(requester, 1);
 		// Можно проверить визуально или заглянуть в базу, должна быть строчка с PENDING
 	}
 
 	@Test
 	void checkAddFriend() {
 		UserJson requester = userClient.createUser(RandomDataUtils.randomUserName(), "12345");
-		UserJson addressee = userClient.createUser(RandomDataUtils.randomUserName(), "12345");
-		userClient.addFriend(requester, addressee);
+		userClient.addFriend(requester, 1);
 		// Можно проверить визуально или заглянуть в базу, должны быть две строчки с ACCEPTED
 	}
 
