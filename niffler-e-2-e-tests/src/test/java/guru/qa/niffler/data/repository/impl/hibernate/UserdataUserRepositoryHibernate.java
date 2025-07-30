@@ -52,6 +52,8 @@ public class UserdataUserRepositoryHibernate implements UserDataUserRepository {
 	public void sendInvitation(UserEntity requester, UserEntity addressee) {
 		entityManager.joinTransaction();
 		requester.addFriends(FriendshipStatus.PENDING, addressee);
+		entityManager.merge(requester);
+		entityManager.merge(addressee);
 	}
 
 	@Override
@@ -59,6 +61,8 @@ public class UserdataUserRepositoryHibernate implements UserDataUserRepository {
 		entityManager.joinTransaction();
 		requester.addFriends(FriendshipStatus.ACCEPTED, addressee);
 		addressee.addFriends(FriendshipStatus.ACCEPTED, requester);
+		entityManager.merge(requester);
+		entityManager.merge(addressee);
 	}
 
 	@Override

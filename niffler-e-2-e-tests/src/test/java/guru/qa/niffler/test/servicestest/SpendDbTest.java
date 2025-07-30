@@ -19,26 +19,27 @@ public class SpendDbTest {
 
 	@Test
 	void checkCreateSend() {
-		SpendJson spendJson = userClient.create(getNewSpend("Test Spring Jdbc 11"));
+		SpendJson spendJson = userClient.create(getNewSpend("Test Spring Jdbc 13"));
 		Assertions.assertNotNull(spendJson);
 	}
 
-	@Test // TODO Не работает с repository JDBC (хотя тест зеленый, но данные не попадают в базу)
+	@Test
 	void checkSpendFindByUsernameAndUpdate() {
-		SpendJson spendJson = userClient.findByUsernameAndSpendDescription(username, "Test Spring Jdbc 11");
+		SpendJson spendJson = userClient.findByUsernameAndSpendDescription(username, "Test Spring Jdbc 13");
 
+		double newAmount = 676.00;
 		SpendJson updatedSpend = new SpendJson(
 				spendJson.id(),
 				spendJson.spendDate(),
 				spendJson.category(),
 				spendJson.currency(),
-				777.00,
+				newAmount,
 				spendJson.description(),
 				spendJson.username()
 		);
-		SpendJson receivedSpend = userClient.update(updatedSpend);
-		System.out.println(receivedSpend);
-		Assertions.assertEquals(777.00, receivedSpend.amount());
+		userClient.update(updatedSpend);
+		SpendJson updateJson = userClient.findByUsernameAndSpendDescription(username, "Test Jdbc 12");
+		Assertions.assertEquals(newAmount, updateJson.amount());
 	}
 
 	@Test
