@@ -2,7 +2,6 @@ package guru.qa.niffler.page;
 
 import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
-import org.openqa.selenium.By;
 
 import static com.codeborne.selenide.Condition.text;
 import static com.codeborne.selenide.Condition.visible;
@@ -14,7 +13,7 @@ public class MainPage {
 	private final SelenideElement profileInMenu = $("li[tabindex='0']");
 	private final SelenideElement friendsInMenu = $("a[href='/people/friends']");
 	private final SelenideElement allPeopleInMenu = $("a[href='/people/all']");
-	private final SelenideElement nextButton = $(By.id("page-next"));
+	private final SelenideElement searchInput = $("input.MuiInputBase-input.css-mnn31");
 
 	public MainPage checkThatPageLoaded() {
 		spendingTable.should(visible);
@@ -30,20 +29,10 @@ public class MainPage {
 	}
 
 	public void checkThatTableContainsSpending(String description) {
-		while (true) {
-			ElementsCollection rows = spendingTable.$$("tbody tr");
-			SelenideElement descriptionRow = rows.findBy(text(description));
-
-			if (descriptionRow.exists()) {
-				descriptionRow.shouldBe(visible);
-				return;
-			}
-			if (nextButton.is(visible)) {
-				nextButton.click();
-			} else {
-				break;
-			}
-		}
+		searchInput.should(visible).setValue(description).pressEnter();
+		ElementsCollection rows = spendingTable.$$("tbody tr");
+		SelenideElement descriptionRow = rows.findBy(text(description));
+		descriptionRow.should(visible);
 	}
 
 	public ProfilePage openProfile() {
