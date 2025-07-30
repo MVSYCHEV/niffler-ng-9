@@ -4,6 +4,7 @@ import guru.qa.niffler.model.auth.AuthUserJson;
 import guru.qa.niffler.model.userdata.UserJson;
 import guru.qa.niffler.service.UserClient;
 import guru.qa.niffler.service.impl.UserDbClient;
+import guru.qa.niffler.utils.RandomDataUtils;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -85,21 +86,19 @@ public class UserDbTest {
 		Assertions.assertEquals(name, userById.username());
 	}
 
-//	@Test // TODO Не работает с Hibernate (хотя тест зеленый, но данные не попадают в базу)
-//	void checkSendInvitation() {
-//		UserJson requester = userClient.createUser(RandomDataUtils.randomUserName(), "12345");
-//		UserJson addressee = userClient.createUser(RandomDataUtils.randomUserName(), "12345");
-//		userClient.sendFriendInvitation(requester, addressee);
-//		// Можно проверить визуально или заглянуть в базу, должна быть строчка с PENDING
-//	}
-//
-//	@Test // TODO Не работает с Hibernate (хотя тест зеленый, но данные не попадают в базу)
-//	void checkAddFriend() {
-//		UserJson requester = userClient.createUser(RandomDataUtils.randomUserName(), "12345");
-//		UserJson addressee = userClient.createUser(RandomDataUtils.randomUserName(), "12345");
-//		userClient.addFriend(requester, addressee);
-//		// Можно проверить визуально или заглянуть в базу, должны быть две строчки с ACCEPTED
-//	}
+	@Test
+	void checkSendInvitation() {
+		UserJson requester = userClient.createUser(RandomDataUtils.randomUserName(), "12345");
+		userClient.addIncomeInvitation(requester, 1);
+		// Можно проверить визуально или заглянуть в базу, должна быть строчка с PENDING
+	}
+
+	@Test
+	void checkAddFriend() {
+		UserJson requester = userClient.createUser(RandomDataUtils.randomUserName(), "12345");
+		userClient.addFriend(requester, 1);
+		// Можно проверить визуально или заглянуть в базу, должны быть две строчки с ACCEPTED
+	}
 
 	@Test
 	void removeUser() {
