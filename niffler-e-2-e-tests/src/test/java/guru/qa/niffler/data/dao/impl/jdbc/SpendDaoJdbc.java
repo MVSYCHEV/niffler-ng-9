@@ -7,16 +7,21 @@ import guru.qa.niffler.data.entity.spend.SpendEntity;
 import guru.qa.niffler.data.tpl.Connections;
 import guru.qa.niffler.model.spend.CurrencyValues;
 
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+@ParametersAreNonnullByDefault
 public class SpendDaoJdbc implements SpendDao {
 	private static final Config CFG = Config.getInstance();
 
 	@Override
+	@Nonnull
+	@SuppressWarnings("resource")
 	public SpendEntity create(SpendEntity spend) {
 		try (PreparedStatement ps = Connections.holder(CFG.spendJdbcUrl()).connection().prepareStatement(
 				"INSERT INTO spend (username, spend_date, currency, amount, description, category_id) " +
@@ -48,6 +53,8 @@ public class SpendDaoJdbc implements SpendDao {
 	}
 
 	@Override
+	@Nonnull
+	@SuppressWarnings("resource")
 	public SpendEntity update(SpendEntity spend) {
 		try (PreparedStatement ps = Connections.holder(CFG.spendJdbcUrl()).connection().prepareStatement(
 				"UPDATE \"spend\" SET spend_date = ?, currency = ?, amount = ?, description = ? WHERE id = ?");
@@ -65,6 +72,8 @@ public class SpendDaoJdbc implements SpendDao {
 	}
 
 	@Override
+	@Nonnull
+	@SuppressWarnings("resource")
 	public Optional<SpendEntity> findSpendById(UUID id) {
 		try (PreparedStatement ps = Connections.holder(CFG.spendJdbcUrl()).connection().prepareStatement(
 				"SELECT s.*, c.* " +
@@ -104,6 +113,8 @@ public class SpendDaoJdbc implements SpendDao {
 	}
 
 	@Override
+	@Nonnull
+	@SuppressWarnings("resource")
 	public List<SpendEntity> findAllByUsername(String username) {
 		List<SpendEntity> allSpends = new ArrayList<>();
 		try (PreparedStatement ps = Connections.holder(CFG.spendJdbcUrl()).connection().prepareStatement(
@@ -139,6 +150,8 @@ public class SpendDaoJdbc implements SpendDao {
 	}
 
 	@Override
+	@Nonnull
+	@SuppressWarnings("resource")
 	public Optional<SpendEntity> findByUsernameAndSpendDescription(String username, String description) {
 		try (PreparedStatement ps = Connections.holder(CFG.spendJdbcUrl()).connection().prepareStatement(
 				"SELECT s.*, c.* " +
@@ -179,6 +192,8 @@ public class SpendDaoJdbc implements SpendDao {
 	}
 
 	@Override
+	@Nonnull
+	@SuppressWarnings("resource")
 	public List<SpendEntity> findAll() {
 		List<SpendEntity> allSpends = new ArrayList<>();
 		try (PreparedStatement ps = Connections.holder(CFG.spendJdbcUrl()).connection().prepareStatement(
@@ -213,6 +228,7 @@ public class SpendDaoJdbc implements SpendDao {
 	}
 
 	@Override
+	@SuppressWarnings("resource")
 	public void deleteSpend(SpendEntity spend) {
 		try (PreparedStatement ps = Connections.holder(CFG.spendJdbcUrl()).connection().prepareStatement(
 				"DELETE FROM spend WHERE id = ?"

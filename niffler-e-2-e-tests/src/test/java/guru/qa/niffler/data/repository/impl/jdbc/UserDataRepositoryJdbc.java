@@ -9,32 +9,40 @@ import guru.qa.niffler.data.entity.userdata.UserEntity;
 import guru.qa.niffler.data.repository.UserDataUserRepository;
 import guru.qa.niffler.data.tpl.Connections;
 
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.Optional;
 import java.util.UUID;
 
+@ParametersAreNonnullByDefault
 public class UserDataRepositoryJdbc implements UserDataUserRepository {
 	private static final UserDataUserDao USER_DATA_USER_DAO_JDBC = new UserDataUserDaoJdbc();
 	private static final Config CFG = Config.getInstance();
 
 	@Override
+	@Nonnull
 	public UserEntity create(UserEntity user) {
 		return USER_DATA_USER_DAO_JDBC.createUser(user);
 	}
 
 	@Override
+	@Nonnull
 	public Optional<UserEntity> findById(UUID id) {
 		return USER_DATA_USER_DAO_JDBC.findById(id);
 	}
 
 	@Override
+	@Nonnull
 	public Optional<UserEntity> findByUsername(String username) {
 		return USER_DATA_USER_DAO_JDBC.findByUsername(username);
 	}
 
 	@Override
+	@Nonnull
+	@SuppressWarnings("resource")
 	public UserEntity update(UserEntity user) {
 		try (PreparedStatement usersPs = Connections.holder(CFG.userdataJdbcUrl()).connection().prepareStatement(
 				"UPDATE \"user\" SET currency = ?, firstname = ?, surname = ?, photo = ?, photo_small = ? " +
@@ -66,6 +74,7 @@ public class UserDataRepositoryJdbc implements UserDataUserRepository {
 	}
 
 	@Override
+	@SuppressWarnings("resource")
 	public void sendInvitation(UserEntity requester, UserEntity addressee) {
 		try (PreparedStatement ps = Connections.holder(CFG.userdataJdbcUrl()).connection().prepareStatement(
 				"INSERT INTO \"friendship\" (requester_id, addressee_id, status, created_date) " +
@@ -82,6 +91,7 @@ public class UserDataRepositoryJdbc implements UserDataUserRepository {
 	}
 
 	@Override
+	@SuppressWarnings("resource")
 	public void addFriend(UserEntity requester, UserEntity addressee) {
 		final String sql = "INSERT INTO \"friendship\" (requester_id, addressee_id, status, created_date) " +
 				"VALUES ( ?, ?, ?, ?)";

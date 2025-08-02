@@ -11,32 +11,39 @@ import guru.qa.niffler.data.tpl.DataSources;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
 
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.Optional;
 import java.util.UUID;
 
+@ParametersAreNonnullByDefault
 public class UserDataRepositorySpringJdbc implements UserDataUserRepository {
 	private final static UserDataUserDao USER_DATA_USER_DAO = new UserDataUserDaoSpringJdbc();
 	private static final String URL = Config.getInstance().userdataJdbcUrl();
 
 	@Override
+	@Nonnull
 	public UserEntity create(UserEntity user) {
 		return USER_DATA_USER_DAO.createUser(user);
 	}
 
 	@Override
+	@Nonnull
 	public Optional<UserEntity> findById(UUID id) {
 		return USER_DATA_USER_DAO.findById(id);
 	}
 
 	@Override
+	@Nonnull
 	public Optional<UserEntity> findByUsername(String username) {
 		return USER_DATA_USER_DAO.findByUsername(username);
 	}
 
 	@Override
+	@Nonnull
 	public UserEntity update(UserEntity user) {
 		JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(URL));
 		jdbcTemplate.update("UPDATE \"user\" SET currency = ?, firstname = ?, surname = ?, photo = ?, " +

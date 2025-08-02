@@ -2,16 +2,18 @@ package guru.qa.niffler.api;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import guru.qa.niffler.config.Config;
-import lombok.SneakyThrows;
 import org.junit.jupiter.api.Assertions;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.jackson.JacksonConverterFactory;
 
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.io.IOException;
 
 import static java.util.Objects.requireNonNull;
 
+@ParametersAreNonnullByDefault
 public class GhApiClient {
 
 	private static final Config CFG = Config.getInstance();
@@ -24,7 +26,7 @@ public class GhApiClient {
 
 	private final GhApi ghApi = retrofit.create(GhApi.class);
 
-	@SneakyThrows
+	@Nonnull
 	public String issueState(String issueNumber) {
 		Response<JsonNode> response;
 		try {

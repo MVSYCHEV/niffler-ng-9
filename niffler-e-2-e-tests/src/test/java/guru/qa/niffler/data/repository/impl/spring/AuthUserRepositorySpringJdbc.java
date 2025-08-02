@@ -13,16 +13,20 @@ import guru.qa.niffler.data.repository.AuthUserRepository;
 import guru.qa.niffler.data.tpl.DataSources;
 import org.springframework.jdbc.core.JdbcTemplate;
 
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+@ParametersAreNonnullByDefault
 public class AuthUserRepositorySpringJdbc implements AuthUserRepository {
 	private static final String URL = Config.getInstance().authJdbcUrl();
 	private static final AuthUserDao AUTH_USER_DAO = new AuthUserDaoSpringJdbc();
 	private static final AuthAuthorityDao AUTHORITY_DAO = new AuthAuthorityDaoSpringJdbc();
 
 	@Override
+	@Nonnull
 	public AuthUserEntity create(AuthUserEntity user) {
 		AuthUserEntity authUser = AUTH_USER_DAO.create(user);
 		AUTHORITY_DAO.create(user.getAuthorities().toArray(new AuthorityEntity[0]));
@@ -30,6 +34,7 @@ public class AuthUserRepositorySpringJdbc implements AuthUserRepository {
 	}
 
 	@Override
+	@Nonnull
 	public AuthUserEntity update(AuthUserEntity user) {
 		JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(URL));
 		jdbcTemplate.update("UPDATE \"user\" SET username = ?, password = ?, enabled = ?, account_non_expired = ?, " +
@@ -40,6 +45,7 @@ public class AuthUserRepositorySpringJdbc implements AuthUserRepository {
 	}
 
 	@Override
+	@Nonnull
 	public Optional<AuthUserEntity> findById(UUID id) {
 		JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(URL));
 		return Optional.of(
@@ -54,6 +60,7 @@ public class AuthUserRepositorySpringJdbc implements AuthUserRepository {
 	}
 
 	@Override
+	@Nonnull
 	public Optional<AuthUserEntity> findByUsername(String username) {
 		JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(URL));
 		return Optional.of(
@@ -68,6 +75,7 @@ public class AuthUserRepositorySpringJdbc implements AuthUserRepository {
 	}
 
 	@Override
+	@Nonnull
 	public List<AuthUserEntity> findAll() {
 		JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(URL));
 		return jdbcTemplate.query(

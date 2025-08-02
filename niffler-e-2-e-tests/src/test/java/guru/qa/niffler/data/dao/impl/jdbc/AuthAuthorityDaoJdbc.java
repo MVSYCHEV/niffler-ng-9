@@ -7,6 +7,7 @@ import guru.qa.niffler.data.entity.auth.Authority;
 import guru.qa.niffler.data.entity.auth.AuthorityEntity;
 import guru.qa.niffler.data.tpl.Connections;
 
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -15,10 +16,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+@ParametersAreNonnullByDefault
 public class AuthAuthorityDaoJdbc implements AuthAuthorityDao {
 	private static final Config CFG = Config.getInstance();
 
 	@Override
+	@SuppressWarnings("resource")
 	public void create(AuthorityEntity... authority) {
 		try (PreparedStatement preparedStatement = Connections.holder(CFG.authJdbcUrl()).connection().prepareStatement(
 				"INSERT into authority (user_id, authority) VALUES (?, ?)",
@@ -37,6 +40,7 @@ public class AuthAuthorityDaoJdbc implements AuthAuthorityDao {
 	}
 
 	@Override
+	@SuppressWarnings("resource")
 	public List<AuthorityEntity> findAll() {
 		List<AuthorityEntity> authorityEntities = new ArrayList<>();
 		try (PreparedStatement preparedStatement = Connections.holder(CFG.authJdbcUrl()).connection().prepareStatement(

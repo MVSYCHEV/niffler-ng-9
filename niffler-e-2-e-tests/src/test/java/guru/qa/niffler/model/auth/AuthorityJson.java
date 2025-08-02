@@ -4,8 +4,11 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import guru.qa.niffler.data.entity.auth.Authority;
 import guru.qa.niffler.data.entity.auth.AuthorityEntity;
 
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.UUID;
 
+@ParametersAreNonnullByDefault
 public record AuthorityJson(
 		@JsonProperty("id")
 		UUID id,
@@ -14,6 +17,7 @@ public record AuthorityJson(
 		@JsonProperty("userId")
 		UUID userId) {
 
+	@Nonnull
 	public static AuthorityJson fromEntity(AuthorityEntity entity) {
 		return new AuthorityJson(
 				entity.getId(),

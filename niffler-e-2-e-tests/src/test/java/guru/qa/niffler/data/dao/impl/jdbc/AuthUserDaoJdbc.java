@@ -7,6 +7,8 @@ import guru.qa.niffler.data.tpl.Connections;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -16,11 +18,14 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+@ParametersAreNonnullByDefault
 public class AuthUserDaoJdbc implements AuthUserDao {
 	private static final PasswordEncoder pe = PasswordEncoderFactories.createDelegatingPasswordEncoder();
 	private static final Config CFG = Config.getInstance();
 
 	@Override
+	@Nonnull
+	@SuppressWarnings("resource")
 	public AuthUserEntity create(AuthUserEntity user) {
 		try (PreparedStatement preparedStatement = Connections.holder(CFG.authJdbcUrl()).connection().prepareStatement(
 				"INSERT INTO \"user\" (username, password, enabled, account_non_expired, account_non_locked, credentials_non_expired) " +
@@ -52,6 +57,8 @@ public class AuthUserDaoJdbc implements AuthUserDao {
 	}
 
 	@Override
+	@Nonnull
+	@SuppressWarnings("resource")
 	public Optional<AuthUserEntity> findById(UUID id) {
 		try (PreparedStatement ps = Connections.holder(CFG.authJdbcUrl()).connection().prepareStatement("SELECT * FROM \"user\" WHERE id = ?")) {
 			ps.setObject(1, id);
@@ -79,6 +86,8 @@ public class AuthUserDaoJdbc implements AuthUserDao {
 	}
 
 	@Override
+	@Nonnull
+	@SuppressWarnings("resource")
 	public List<AuthUserEntity> findAll() {
 		List<AuthUserEntity> authUserEntities = new ArrayList<>();
 		try ( PreparedStatement preparedStatement = Connections.holder(CFG.authJdbcUrl()).connection().prepareStatement("SELECT * FROM \"user\"")) {
