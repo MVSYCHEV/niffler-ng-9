@@ -41,7 +41,7 @@ public class ProfileTest {
 
 	@User
 	@Test
-	void checkAddNewSpending(UserJson user) {
+	void checkChangeProfile(UserJson user) {
 		String userName = RandomDataUtils.randomName();
 
 		Selenide.open(CFG.frontUrl(), LoginPage.class)
