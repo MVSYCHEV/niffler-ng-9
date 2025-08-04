@@ -9,6 +9,7 @@ import guru.qa.niffler.data.tpl.XaTransactionTemplate;
 import guru.qa.niffler.model.spend.CategoryJson;
 import guru.qa.niffler.model.spend.SpendJson;
 import guru.qa.niffler.service.SpendClient;
+import io.qameta.allure.Step;
 import org.springframework.jdbc.support.JdbcTransactionManager;
 import org.springframework.transaction.support.TransactionTemplate;
 
@@ -40,6 +41,7 @@ public class SpendDbClient implements SpendClient {
 	private final SpendRepository spendRepository = new SpendRepositorySpringJdbc();
 
 	@Override
+	@Step("Через BD создать новый расход '{0}'")
 	@Nonnull
 	public SpendJson create(SpendJson spend) {
 		return requireNonNull(xaTransactionTemplate.execute(() -> {
@@ -50,6 +52,7 @@ public class SpendDbClient implements SpendClient {
 	}
 
 	@Override
+	@Step("Через BD отредактировать расход '{0}'")
 	@Nonnull
 	public SpendJson update(SpendJson spend) {
 		return requireNonNull(xaTransactionTemplate.execute(() -> {
@@ -60,6 +63,7 @@ public class SpendDbClient implements SpendClient {
 	}
 
 	@Override
+	@Step("Через BD найти расход с id '{0}'")
 	@Nonnull
 	public SpendJson findById(UUID id) {
 		return requireNonNull(xaTransactionTemplate.execute(() -> {
@@ -73,6 +77,7 @@ public class SpendDbClient implements SpendClient {
 	}
 
 	@Override
+	@Step("Через BD найти расход у пользователя '{0}' и описанием '{1}'")
 	@Nonnull
 	public SpendJson findByUsernameAndSpendDescription(String username, String description) {
 		return requireNonNull(xaTransactionTemplate.execute(() -> {
@@ -87,6 +92,7 @@ public class SpendDbClient implements SpendClient {
 	}
 
 	@Override
+	@Step("Через BD найти все расходы у пользователя '{0}'")
 	@Nonnull
 	public List<SpendJson> findAll(String username) {
 		return requireNonNull(xaTransactionTemplate.execute(() -> {
@@ -99,6 +105,7 @@ public class SpendDbClient implements SpendClient {
 	}
 
 	@Override
+	@Step("Через BD удалить расход '{0}'")
 	public void remove(SpendJson spend) {
 		xaTransactionTemplate.execute(() -> {
 					spendRepository.remove(SpendEntity.fromJson(spend));
@@ -108,6 +115,7 @@ public class SpendDbClient implements SpendClient {
 	}
 
 	@Override
+	@Step("Через BD создать новую категорию '{0}'")
 	@Nonnull
 	public CategoryJson create(CategoryJson category) {
 		return requireNonNull(xaTransactionTemplate.execute(() -> {
@@ -118,6 +126,7 @@ public class SpendDbClient implements SpendClient {
 	}
 
 	@Override
+	@Step("Через BD отредактировать категорию '{0}'")
 	@Nonnull
 	public CategoryJson update(CategoryJson category) {
 		return requireNonNull(xaTransactionTemplate.execute(() -> {
@@ -128,6 +137,7 @@ public class SpendDbClient implements SpendClient {
 	}
 
 	@Override
+	@Step("Через BD найти категорию с id '{0}'")
 	@Nonnull
 	public CategoryJson findCategoryById(UUID id) {
 		return requireNonNull(xaTransactionTemplate.execute(() -> {
@@ -142,6 +152,7 @@ public class SpendDbClient implements SpendClient {
 	}
 
 	@Override
+	@Step("Через BD найти категорию с именем '{0}' и описанием '{1}'")
 	@Nonnull
 	public CategoryJson findCategoryByUsernameAndCategoryName(String username, String categoryName) {
 		return requireNonNull(xaTransactionTemplate.execute(() -> {
@@ -156,6 +167,7 @@ public class SpendDbClient implements SpendClient {
 	}
 
 	@Override
+	@Step("Через BD найти все категории у пользователя '{0}'")
 	@Nonnull
 	public List<CategoryJson> findAllCategories(String username) {
 		return requireNonNull(xaTransactionTemplate.execute(() -> {
@@ -168,6 +180,7 @@ public class SpendDbClient implements SpendClient {
 	}
 
 	@Override
+	@Step("Через BD удалить категорию '{0}'")
 	public void remove(CategoryJson category) {
 		CategoryEntity categoryEntity = CategoryEntity.fromJson(category);
 		String username = categoryEntity.getUsername();

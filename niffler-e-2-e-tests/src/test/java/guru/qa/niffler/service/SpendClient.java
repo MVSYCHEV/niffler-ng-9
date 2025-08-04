@@ -4,6 +4,7 @@ import guru.qa.niffler.model.spend.CategoryJson;
 import guru.qa.niffler.model.spend.SpendJson;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.List;
 import java.util.UUID;
@@ -13,16 +14,16 @@ public interface SpendClient {
 	/**
 	 * Spends
 	 */
-	@Nonnull
+	@Nullable
 	SpendJson create(SpendJson spend);
 
-	@Nonnull
+	@Nullable
 	SpendJson update(SpendJson spend);
 
-	@Nonnull
+	@Nullable
 	SpendJson findById(UUID id);
 
-	@Nonnull
+	@Nullable
 	SpendJson findByUsernameAndSpendDescription(String username, String description);
 
 	@Nonnull
@@ -34,16 +35,16 @@ public interface SpendClient {
 	 * Categories
 	 */
 
-	@Nonnull
+	@Nullable
 	CategoryJson create(CategoryJson category);
 
-	@Nonnull
+	@Nullable
 	CategoryJson update(CategoryJson category);
 
-	@Nonnull
+	@Nullable
 	CategoryJson findCategoryById(UUID id);
 
-	@Nonnull
+	@Nullable
 	CategoryJson findCategoryByUsernameAndCategoryName(String username, String categoryName);
 
 	@Nonnull

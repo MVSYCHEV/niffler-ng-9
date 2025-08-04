@@ -82,4 +82,36 @@ public class FriendsTest {
 				.checkThatPageLoaded()
 				.checkFriendByName("phylicia.windler");
 	}
+
+	@Test
+	@User(
+			incomeInvitations = 1
+	)
+	void checkAcceptFriendRequest(UserJson user) {
+		final UserJson income = user.testData().incomeInvitations().getFirst();
+
+		Selenide.open(CFG.frontUrl(), LoginPage.class)
+				.fillLoginPage(user.username(), user.testData().password())
+				.submit()
+				.checkThatPageLoaded()
+				.openFriends()
+				.checkThatPageLoaded()
+				.acceptFriendRequestFromUser(income.username());
+	}
+
+	@Test
+	@User(
+			incomeInvitations = 1
+	)
+	void checkDeclineFriendRequest(UserJson user) {
+		final UserJson income = user.testData().incomeInvitations().getFirst();
+
+		Selenide.open(CFG.frontUrl(), LoginPage.class)
+				.fillLoginPage(user.username(), user.testData().password())
+				.submit()
+				.checkThatPageLoaded()
+				.openFriends()
+				.checkThatPageLoaded()
+				.declineFriendRequestFromUser(income.username());
+	}
 }

@@ -16,6 +16,7 @@ import guru.qa.niffler.model.spend.CurrencyValues;
 import guru.qa.niffler.model.userdata.UserJson;
 import guru.qa.niffler.service.UserClient;
 import guru.qa.niffler.utils.RandomDataUtils;
+import io.qameta.allure.Step;
 import jaxb.userdata.FriendshipStatus;
 import org.springframework.jdbc.support.JdbcTransactionManager;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
@@ -62,6 +63,7 @@ public class UserDbClient implements UserClient {
 	private final UserDataUserRepository userDataUserRepository = new UserDataRepositorySpringJdbc();
 
 	@Override
+	@Step("Через BD создать пользователя с именем '{0}' и паролем '{1}'")
 	@Nonnull
 	public UserJson createUser(String username, String password) {
 		return requireNonNull(xaTransactionTemplate.execute(() -> {
@@ -73,6 +75,7 @@ public class UserDbClient implements UserClient {
 	}
 
 	@Override
+	@Step("Через BD обновить пользователя '{0}'")
 	@Nonnull
 	public AuthUserJson update(AuthUserJson authUserJson) {
 		return requireNonNull(xaTransactionTemplate.execute(() -> {
@@ -82,6 +85,7 @@ public class UserDbClient implements UserClient {
 	}
 
 	@Override
+	@Step("Через BD найти пользователя с id '{0}'")
 	@Nonnull
 	public AuthUserJson getAuthUserById(UUID id) {
 		return requireNonNull(xaTransactionTemplate.execute(() -> {
@@ -91,6 +95,7 @@ public class UserDbClient implements UserClient {
 	}
 
 	@Override
+	@Step("Через BD найти пользователя с именем '{0}'")
 	@Nonnull
 	public AuthUserJson getAuthUserByName(String username) {
 		return requireNonNull(xaTransactionTemplate.execute(() -> {
@@ -100,6 +105,7 @@ public class UserDbClient implements UserClient {
 	}
 
 	@Override
+	@Step("Через BD найти всех пользователей")
 	@Nonnull
 	public List<AuthUserJson> findAll() {
 		return requireNonNull(xaTransactionTemplate.execute(() -> {
@@ -112,6 +118,7 @@ public class UserDbClient implements UserClient {
 	}
 
 	@Override
+	@Step("Через BD обновить пользователя '{0}'")
 	@Nonnull
 	public UserJson update(UserJson userJson) {
 		return requireNonNull(xaTransactionTemplate.execute(() -> {
@@ -122,6 +129,7 @@ public class UserDbClient implements UserClient {
 	}
 
 	@Override
+	@Step("Через BD найти пользователя с id '{0}'")
 	@Nonnull
 	public UserJson getUserById(UUID id) {
 		return requireNonNull(xaTransactionTemplate.execute(() -> {
@@ -132,6 +140,7 @@ public class UserDbClient implements UserClient {
 	}
 
 	@Override
+	@Step("Через BD найти пользователя с именем '{0}'")
 	@Nonnull
 	public UserJson getUserByName(String username) {
 		return requireNonNull(xaTransactionTemplate.execute(() -> {
@@ -142,6 +151,7 @@ public class UserDbClient implements UserClient {
 	}
 
 	@Override
+	@Step("Через BD для юзера '{0}' добавить '{1}' входящих предложений дружить")
 	@Nonnull
 	public List<UserJson> addIncomeInvitation(UserJson targetUser, int count) {
 		final List<UserJson> result = new ArrayList<>();
@@ -169,6 +179,7 @@ public class UserDbClient implements UserClient {
 	}
 
 	@Override
+	@Step("Через BD для юзера '{0}' добавить '{1}' исходящих предложений дружить")
 	@Nonnull
 	public List<UserJson> addOutcomeInvitation(UserJson targetUser, int count) {
 		final List<UserJson> result = new ArrayList<>();
@@ -197,6 +208,7 @@ public class UserDbClient implements UserClient {
 	}
 
 	@Override
+	@Step("Через BD для юзера '{0}' добавить '{1}' друзей")
 	@Nonnull
 	public List<UserJson> addFriend(UserJson targetUser, int count) {
 		final List<UserJson> result = new ArrayList<>();
@@ -225,6 +237,7 @@ public class UserDbClient implements UserClient {
 	}
 
 	@Override
+	@Step("Через BD удалить юзера '{0}'")
 	public void removeUser(AuthUserJson authUserJson) {
 		xaTransactionTemplate.execute(() -> {
 					AuthUserEntity authUser = AuthUserEntity.fromJson(authUserJson);
