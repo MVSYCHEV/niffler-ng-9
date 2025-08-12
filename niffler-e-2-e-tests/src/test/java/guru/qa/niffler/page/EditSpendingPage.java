@@ -22,7 +22,6 @@ public class EditSpendingPage {
   @Step("Задать расходу новое описание '{0}'")
   @Nonnull
   public EditSpendingPage setNewSpendingDescription(String description) {
-    descriptionInput.clear();
     descriptionInput.setValue(description);
     return this;
   }
@@ -30,7 +29,6 @@ public class EditSpendingPage {
   @Step("Задать расходу сумму '{0}'")
   @Nonnull
   public EditSpendingPage setNewSpendingAmount(double amount) {
-    inputAmount.clear();
     inputAmount.setValue(String.valueOf(amount));
     return this;
   }
