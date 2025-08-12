@@ -6,9 +6,12 @@ import guru.qa.niffler.jupiter.annotation.DisabledByIssue;
 import guru.qa.niffler.jupiter.annotation.Spending;
 import guru.qa.niffler.jupiter.annotation.meta.User;
 import guru.qa.niffler.jupiter.annotation.meta.WebTest;
+import guru.qa.niffler.model.spend.CurrencyValues;
 import guru.qa.niffler.model.spend.SpendJson;
 import guru.qa.niffler.model.userdata.UserJson;
 import guru.qa.niffler.page.LoginPage;
+import guru.qa.niffler.page.MainPage;
+import guru.qa.niffler.utils.RandomDataUtils;
 import org.junit.jupiter.api.Test;
 
 @WebTest
@@ -44,5 +47,24 @@ public class SpendingTest {
 				.submit()
 				.checkThatPageLoaded()
 				.checkThatTableContainsSpending("Second Page Descr");
+	}
+
+	@User
+	@Test
+	void checkAddNewSpending(UserJson user) {
+		String description = RandomDataUtils.randomSentence(3);
+
+		Selenide.open(CFG.frontUrl(), LoginPage.class)
+				.fillLoginPage(user.username(), user.testData().password())
+				.submit()
+				.checkThatPageLoaded()
+				.addNewSpending()
+				.setNewSpendingCategory(RandomDataUtils.randomCategoryName())
+				.setNewSpendingAmount(50.0)
+				.setNewSpendingCurrency(CurrencyValues.USD)
+				.setNewSpendingDescription(description)
+				.save();
+
+		new MainPage().checkThatTableContainsSpending(description);
 	}
 }

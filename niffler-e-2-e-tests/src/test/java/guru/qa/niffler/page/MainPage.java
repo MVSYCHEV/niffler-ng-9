@@ -1,55 +1,57 @@
 package guru.qa.niffler.page;
 
-import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
+import guru.qa.niffler.page.component.Header;
+import guru.qa.niffler.page.component.SpendingTable;
+import io.qameta.allure.Step;
 
-import static com.codeborne.selenide.Condition.text;
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
+
 import static com.codeborne.selenide.Condition.visible;
 import static com.codeborne.selenide.Selenide.$;
 
+@ParametersAreNonnullByDefault
 public class MainPage {
 	private final SelenideElement spendingTable = $("#spendings");
-	private final SelenideElement profileIcon = $("svg[data-testid='PersonIcon']");
-	private final SelenideElement profileInMenu = $("li[tabindex='0']");
-	private final SelenideElement friendsInMenu = $("a[href='/people/friends']");
-	private final SelenideElement allPeopleInMenu = $("a[href='/people/all']");
-	private final SelenideElement searchInput = $("input.MuiInputBase-input.css-mnn31");
 
+	private final Header header = new Header();
+	private final SpendingTable spends = new SpendingTable();
+
+	@Step("Проверить, что на главной странице отображается таблица расходов")
+	@Nonnull
 	public MainPage checkThatPageLoaded() {
 		spendingTable.should(visible);
 		return this;
 	}
 
+	@Nonnull
 	public EditSpendingPage editSpending(String description) {
-		spendingTable.$$("tbody tr").find(text(description))
-				.$$("td")
-				.get(5)
-				.click();
-		return new EditSpendingPage();
+		return spends.editSpending(description);
 	}
 
 	public void checkThatTableContainsSpending(String description) {
-		searchInput.should(visible).setValue(description).pressEnter();
-		ElementsCollection rows = spendingTable.$$("tbody tr");
-		SelenideElement descriptionRow = rows.findBy(text(description));
-		descriptionRow.should(visible);
+		spends.searchSpendingByDescription(description);
 	}
 
+	@Nonnull
 	public ProfilePage openProfile() {
-		profileIcon.click();
-		profileInMenu.click();
-		return new ProfilePage();
+		return header.toProfilePage();
 	}
 
+	@Nonnull
 	public FriendsPage openFriends() {
-		profileIcon.click();
-		friendsInMenu.click();
-		return new FriendsPage();
+		return header.toFriendsPage();
 	}
 
+	@Nonnull
 	public AllPeoplePage openAllPeople() {
-		profileIcon.click();
-		allPeopleInMenu.click();
-		return new AllPeoplePage();
+		return header.toAllPeoplesPage();
+	}
+
+	@Nonnull
+	public EditSpendingPage addNewSpending() {
+		header.addSpending();
+		return new EditSpendingPage();
 	}
 }

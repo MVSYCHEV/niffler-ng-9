@@ -1,5 +1,7 @@
 package guru.qa.niffler.data.tpl;
 
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -7,6 +9,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
+@ParametersAreNonnullByDefault
 public class JdbcConnectionHolder implements AutoCloseable {
 	private final DataSource dataSource;
 	private final Map<Long, Connection> threadConnections = new ConcurrentHashMap<>();
@@ -15,6 +18,7 @@ public class JdbcConnectionHolder implements AutoCloseable {
 		this.dataSource = dataSource;
 	}
 
+	@Nonnull
 	public Connection connection() {
 		return threadConnections.computeIfAbsent(
 				Thread.currentThread().threadId(),

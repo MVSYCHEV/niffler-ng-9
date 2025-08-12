@@ -14,6 +14,8 @@ import guru.qa.niffler.data.tpl.Connections;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -24,12 +26,14 @@ import java.util.UUID;
 
 import static guru.qa.niffler.data.tpl.Connections.holder;
 
+@ParametersAreNonnullByDefault
 public class AuthUserRepositoryJdbc implements AuthUserRepository {
 	private static final String URL = Config.getInstance().authJdbcUrl();
 	private static final AuthUserDao AUTH_USER_DAO = new AuthUserDaoJdbc();
 	private static final AuthAuthorityDao AUTHORITY_DAO = new AuthAuthorityDaoJdbc();
 
 	@Override
+	@Nonnull
 	public AuthUserEntity create(AuthUserEntity user) {
 		AuthUserEntity authUser = AUTH_USER_DAO.create(user);
 		AUTHORITY_DAO.create(user.getAuthorities().toArray(new AuthorityEntity[0]));
@@ -37,6 +41,8 @@ public class AuthUserRepositoryJdbc implements AuthUserRepository {
 	}
 
 	@Override
+	@Nonnull
+	@SuppressWarnings("resource")
 	public AuthUserEntity update(AuthUserEntity user) {
 		final PasswordEncoder pe = PasswordEncoderFactories.createDelegatingPasswordEncoder();
 		try (PreparedStatement preparedStatement = Connections.holder(URL).connection().prepareStatement(
@@ -60,6 +66,8 @@ public class AuthUserRepositoryJdbc implements AuthUserRepository {
 	}
 
 	@Override
+	@Nonnull
+	@SuppressWarnings("resource")
 	public Optional<AuthUserEntity> findById(UUID id) {
 		try (PreparedStatement ps = holder(URL).connection().prepareStatement(
 				"SELECT u.id AS id, u.username, u.password, u.enabled, u.account_non_expired, u.account_non_locked, " +
@@ -105,6 +113,8 @@ public class AuthUserRepositoryJdbc implements AuthUserRepository {
 	}
 
 	@Override
+	@Nonnull
+	@SuppressWarnings("resource")
 	public Optional<AuthUserEntity> findByUsername(String username) {
 		try (PreparedStatement ps = holder(URL).connection().prepareStatement(
 				"SELECT u.id AS id, u.username, u.password, u.enabled, u.account_non_expired, u.account_non_locked, " +
@@ -142,6 +152,8 @@ public class AuthUserRepositoryJdbc implements AuthUserRepository {
 	}
 
 	@Override
+	@Nonnull
+	@SuppressWarnings("resource")
 	public List<AuthUserEntity> findAll() {
 		List<AuthUserEntity> authUserEntities = new ArrayList<>();
 		try (PreparedStatement preparedStatement = holder(URL).connection().prepareStatement(
@@ -171,6 +183,7 @@ public class AuthUserRepositoryJdbc implements AuthUserRepository {
 	}
 
 	@Override
+	@SuppressWarnings("resource")
 	public void remove(AuthUserEntity user) {
 		try (PreparedStatement psAuthority = Connections.holder(URL).connection().prepareStatement(
 				"DELETE FROM \"authority\" WHERE user_id = ?");

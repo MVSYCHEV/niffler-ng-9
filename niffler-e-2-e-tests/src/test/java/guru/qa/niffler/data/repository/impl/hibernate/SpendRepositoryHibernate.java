@@ -7,16 +7,20 @@ import guru.qa.niffler.data.repository.SpendRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.NoResultException;
 
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
 import static guru.qa.niffler.data.jpa.EntityManagers.em;
 
+@ParametersAreNonnullByDefault
 public class SpendRepositoryHibernate implements SpendRepository {
 	private final EntityManager entityManager = em(Config.getInstance().spendJdbcUrl());
 
 	@Override
+	@Nonnull
 	public SpendEntity create(SpendEntity spend) {
 		entityManager.joinTransaction();
 		entityManager.persist(spend);
@@ -24,12 +28,14 @@ public class SpendRepositoryHibernate implements SpendRepository {
 	}
 
 	@Override
+	@Nonnull
 	public SpendEntity update(SpendEntity spend) {
 		entityManager.joinTransaction();
 		return entityManager.merge(spend);
 	}
 
 	@Override
+	@Nonnull
 	public CategoryEntity createCategory(CategoryEntity category) {
 		entityManager.joinTransaction();
 		entityManager.persist(category);
@@ -37,12 +43,14 @@ public class SpendRepositoryHibernate implements SpendRepository {
 	}
 
 	@Override
+	@Nonnull
 	public CategoryEntity update(CategoryEntity category) {
 		entityManager.joinTransaction();
 		return entityManager.merge(category);
 	}
 
 	@Override
+	@Nonnull
 	public Optional<CategoryEntity> findCategoryById(UUID id) {
 		return Optional.ofNullable(
 				entityManager.find(CategoryEntity.class, id)
@@ -50,6 +58,7 @@ public class SpendRepositoryHibernate implements SpendRepository {
 	}
 
 	@Override
+	@Nonnull
 	public Optional<CategoryEntity> findCategoryByUsernameAndCategoryName(String username, String categoryName) {
 		try {
 			return Optional.of(
@@ -65,6 +74,7 @@ public class SpendRepositoryHibernate implements SpendRepository {
 	}
 
 	@Override
+	@Nonnull
 	public List<SpendEntity> findAllByUsername(String username) {
 		return entityManager.createQuery("select s from SpendEntity s where s.username =: username", SpendEntity.class)
 				.setParameter("username", username)
@@ -72,6 +82,7 @@ public class SpendRepositoryHibernate implements SpendRepository {
 	}
 
 	@Override
+	@Nonnull
 	public Optional<SpendEntity> findById(UUID id) {
 		return Optional.ofNullable(
 				entityManager.find(SpendEntity.class, id)
@@ -79,6 +90,7 @@ public class SpendRepositoryHibernate implements SpendRepository {
 	}
 
 	@Override
+	@Nonnull
 	public Optional<SpendEntity> findByUsernameAndSpendDescription(String username, String spendDescription) {
 		try {
 			return Optional.of(
@@ -94,6 +106,7 @@ public class SpendRepositoryHibernate implements SpendRepository {
 	}
 
 	@Override
+	@Nonnull
 	public List<CategoryEntity> findAllCategoriesByUsername(String username) {
 		return entityManager.createQuery("select c from CategoryEntity c where c.username =: username", CategoryEntity.class)
 				.setParameter("username", username)

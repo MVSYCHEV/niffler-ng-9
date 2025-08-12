@@ -16,17 +16,22 @@ import guru.qa.niffler.model.spend.CurrencyValues;
 import guru.qa.niffler.model.userdata.UserJson;
 import guru.qa.niffler.service.UserClient;
 import guru.qa.niffler.utils.RandomDataUtils;
+import io.qameta.allure.Step;
 import jaxb.userdata.FriendshipStatus;
 import org.springframework.jdbc.support.JdbcTransactionManager;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.support.TransactionTemplate;
 
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.*;
 import java.util.stream.Collectors;
 
 import static guru.qa.niffler.data.tpl.DataSources.dataSource;
+import static java.util.Objects.requireNonNull;
 
+@ParametersAreNonnullByDefault
 public class UserDbClient implements UserClient {
 	private static final Config CFG = Config.getInstance();
 	/**
@@ -58,78 +63,96 @@ public class UserDbClient implements UserClient {
 	private final UserDataUserRepository userDataUserRepository = new UserDataRepositorySpringJdbc();
 
 	@Override
+	@Step("Через BD создать пользователя с именем '{0}' и паролем '{1}'")
+	@Nonnull
 	public UserJson createUser(String username, String password) {
-		return xaTransactionTemplate.execute(() -> {
+		return requireNonNull(xaTransactionTemplate.execute(() -> {
 			AuthUserEntity authUserEntity = authUserEntity(username, password);
 			authUserRepository.create(authUserEntity);
 			UserEntity userEntity = userDataUserRepository.create(userEntity(username));
 			return UserJson.fromEntity(userEntity, null);
-		});
+		}));
 	}
 
 	@Override
+	@Step("Через BD обновить пользователя '{0}'")
+	@Nonnull
 	public AuthUserJson update(AuthUserJson authUserJson) {
-		return xaTransactionTemplate.execute(() -> {
+		return requireNonNull(xaTransactionTemplate.execute(() -> {
 			AuthUserEntity authUserEntity = AuthUserEntity.fromJson(authUserJson);
 			return AuthUserJson.fromEntity(authUserRepository.update(authUserEntity));
-		});
+		}));
 	}
 
 	@Override
+	@Step("Через BD найти пользователя с id '{0}'")
+	@Nonnull
 	public AuthUserJson getAuthUserById(UUID id) {
-		return xaTransactionTemplate.execute(() -> {
+		return requireNonNull(xaTransactionTemplate.execute(() -> {
 			Optional<AuthUserEntity> authUserEntity = authUserRepository.findById(id);
 			return AuthUserJson.fromEntity(authUserEntity.get());
-		});
+		}));
 	}
 
 	@Override
+	@Step("Через BD найти пользователя с именем '{0}'")
+	@Nonnull
 	public AuthUserJson getAuthUserByName(String username) {
-		return xaTransactionTemplate.execute(() -> {
+		return requireNonNull(xaTransactionTemplate.execute(() -> {
 			Optional<AuthUserEntity> authUserEntity = authUserRepository.findByUsername(username);
 			return AuthUserJson.fromEntity(authUserEntity.get());
-		});
+		}));
 	}
 
 	@Override
+	@Step("Через BD найти всех пользователей")
+	@Nonnull
 	public List<AuthUserJson> findAll() {
-		return xaTransactionTemplate.execute(() -> {
+		return requireNonNull(xaTransactionTemplate.execute(() -> {
 					List<AuthUserEntity> authUserEntities = authUserRepository.findAll();
 					return authUserEntities.stream()
 							.map(AuthUserJson::fromEntity)
 							.collect(Collectors.toList());
 				}
-		);
+		));
 	}
 
 	@Override
+	@Step("Через BD обновить пользователя '{0}'")
+	@Nonnull
 	public UserJson update(UserJson userJson) {
-		return xaTransactionTemplate.execute(() -> {
+		return requireNonNull(xaTransactionTemplate.execute(() -> {
 					UserEntity userEntity = UserEntity.fromJson(userJson);
 					return UserJson.fromEntity(userDataUserRepository.update(userEntity), null);
 				}
-		);
+		));
 	}
 
 	@Override
+	@Step("Через BD найти пользователя с id '{0}'")
+	@Nonnull
 	public UserJson getUserById(UUID id) {
-		return xaTransactionTemplate.execute(() -> {
+		return requireNonNull(xaTransactionTemplate.execute(() -> {
 					Optional<UserEntity> userEntity = userDataUserRepository.findById(id);
 					return UserJson.fromEntity(userEntity.get(), null);
 				}
-		);
+		));
 	}
 
 	@Override
+	@Step("Через BD найти пользователя с именем '{0}'")
+	@Nonnull
 	public UserJson getUserByName(String username) {
-		return xaTransactionTemplate.execute(() -> {
+		return requireNonNull(xaTransactionTemplate.execute(() -> {
 					Optional<UserEntity> userEntity = userDataUserRepository.findByUsername(username);
 					return UserJson.fromEntity(userEntity.get(), null);
 				}
-		);
+		));
 	}
 
 	@Override
+	@Step("Через BD для юзера '{0}' добавить '{1}' входящих предложений дружить")
+	@Nonnull
 	public List<UserJson> addIncomeInvitation(UserJson targetUser, int count) {
 		final List<UserJson> result = new ArrayList<>();
 		if (count > 0) {
@@ -156,6 +179,8 @@ public class UserDbClient implements UserClient {
 	}
 
 	@Override
+	@Step("Через BD для юзера '{0}' добавить '{1}' исходящих предложений дружить")
+	@Nonnull
 	public List<UserJson> addOutcomeInvitation(UserJson targetUser, int count) {
 		final List<UserJson> result = new ArrayList<>();
 		if (count > 0) {
@@ -183,6 +208,8 @@ public class UserDbClient implements UserClient {
 	}
 
 	@Override
+	@Step("Через BD для юзера '{0}' добавить '{1}' друзей")
+	@Nonnull
 	public List<UserJson> addFriend(UserJson targetUser, int count) {
 		final List<UserJson> result = new ArrayList<>();
 		if (count > 0) {
@@ -210,6 +237,7 @@ public class UserDbClient implements UserClient {
 	}
 
 	@Override
+	@Step("Через BD удалить юзера '{0}'")
 	public void removeUser(AuthUserJson authUserJson) {
 		xaTransactionTemplate.execute(() -> {
 					AuthUserEntity authUser = AuthUserEntity.fromJson(authUserJson);

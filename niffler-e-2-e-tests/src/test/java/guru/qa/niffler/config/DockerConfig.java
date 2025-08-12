@@ -2,60 +2,61 @@ package guru.qa.niffler.config;
 
 import javax.annotation.Nonnull;
 
-enum LocalConfig implements Config {
+enum DockerConfig implements Config {
   INSTANCE;
 
   @Override
   @Nonnull
   public String frontUrl() {
-    return "http://127.0.0.1:3000/";
+    return "";
   }
 
   @Override
   @Nonnull
   public String authUrl() {
-    return "http://127.0.0.1:9000";
+    return "";
   }
 
   @Override
   @Nonnull
   public String authJdbcUrl() {
-    return "jdbc:postgresql://127.0.0.1:5432/niffler-auth";
+    return "";
   }
 
   @Override
   @Nonnull
   public String gatewayUrl() {
-    return "http://127.0.0.1:8090";
+    return "";
   }
 
   @Override
   @Nonnull
   public String userdataUrl() {
-    return "http://127.0.0.1:8089";
+    return "";
   }
 
   @Override
   @Nonnull
   public String userdataJdbcUrl() {
-    return "jdbc:postgresql://127.0.0.1:5432/niffler-userdata";
+    return "";
   }
 
   @Override
   @Nonnull
   public String spendUrl() {
-    return "http://127.0.0.1:8093/";
+    return "";
   }
 
   @Override
   @Nonnull
   public String spendJdbcUrl() {
-    return "jdbc:postgresql://127.0.0.1:5432/niffler-spend";
+    return "";
   }
 
   @Override
   @Nonnull
   public String currencyJdbcUrl() {
-    return "jdbc:postgresql://127.0.0.1:5432/niffler-currency";
+    return "";
   }
+
 }
