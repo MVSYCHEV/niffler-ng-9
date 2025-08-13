@@ -1,16 +1,14 @@
 package guru.qa.niffler.service.impl;
 
 import guru.qa.niffler.api.SpendApi;
-import guru.qa.niffler.config.Config;
 import guru.qa.niffler.model.spend.CategoryJson;
 import guru.qa.niffler.model.spend.CurrencyValues;
 import guru.qa.niffler.model.spend.SpendJson;
+import guru.qa.niffler.service.RestClient;
 import guru.qa.niffler.service.SpendClient;
 import io.qameta.allure.Step;
 import org.junit.jupiter.api.Assertions;
 import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.jackson.JacksonConverterFactory;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -22,13 +20,13 @@ import java.util.List;
 import java.util.UUID;
 
 @ParametersAreNonnullByDefault
-public class SpendApiClient implements SpendClient {
-	private static final Retrofit retrofit = new Retrofit.Builder()
-			.baseUrl(Config.getInstance().spendUrl())
-			.addConverterFactory(JacksonConverterFactory.create())
-			.build();
+public final class SpendApiClient extends RestClient implements SpendClient {
+	private final SpendApi spendApi;
 
-	private final SpendApi spendApi = retrofit.create(SpendApi.class);
+	public SpendApiClient() {
+		super(CFG.spendUrl());
+		this.spendApi = create(SpendApi.class);
+	}
 
 	@Override
 	@Step("Через Api создать новый расход '{0}'")

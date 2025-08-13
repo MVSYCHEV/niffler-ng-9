@@ -12,7 +12,7 @@ import static com.codeborne.selenide.Condition.value;
 import static com.codeborne.selenide.Selenide.$;
 
 @ParametersAreNonnullByDefault
-public class ProfilePage {
+public class ProfilePage extends BasePage<ProfilePage> {
 	private final SelenideElement uploadNewPictureButton = $("span[role='button']");
 	private final SelenideElement usernameInput = $("label[for='username']");
 	private final SelenideElement nameInput = $("#name");

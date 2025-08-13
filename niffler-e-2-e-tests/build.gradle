@@ -69,7 +69,7 @@ dependencies {
     // REST
     testImplementation "com.squareup.okhttp3:logging-interceptor:${okhttp3Version}"
     testImplementation "com.squareup.okhttp3:okhttp-urlconnection:${okhttp3Version}"
-    testImplementation "com.squareup.okhttp3:okhttp:${okhttp3Version}"
+    testImplementation "com.squareup.okhttp3:okhttp:3.14.9"
     testImplementation("com.squareup.retrofit2:retrofit:${retrofitVersion}") {
         exclude group: "com.squareup.okhttp3"
     }
