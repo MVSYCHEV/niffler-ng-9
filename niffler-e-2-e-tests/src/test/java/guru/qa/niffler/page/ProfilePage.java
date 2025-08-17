@@ -12,7 +12,8 @@ import static com.codeborne.selenide.Condition.value;
 import static com.codeborne.selenide.Selenide.$;
 
 @ParametersAreNonnullByDefault
-public class ProfilePage {
+public class ProfilePage extends BasePage<ProfilePage> {
+
 	private final SelenideElement uploadNewPictureButton = $("span[role='button']");
 	private final SelenideElement usernameInput = $("label[for='username']");
 	private final SelenideElement nameInput = $("#name");
@@ -34,7 +35,7 @@ public class ProfilePage {
 		categories.shouldHave(text(categoryName));
 	}
 
-	@Step("Проверить, что у пользователя есть активная категория '{0}'")
+	@Step("Задать пользователю новое имя '{0}'")
 	@Nonnull
 	public ProfilePage setNewName(String name) {
 		nameInput.clear();
@@ -42,10 +43,11 @@ public class ProfilePage {
 		return this;
 	}
 
-	@Step("Проверить, что у пользователя есть активная категория '{0}'")
+	@Step("Нажать на кнопку 'Save changes'")
 	@Nonnull
 	public ProfilePage saveChanges() {
 		saveChangesButton.click();
+		checkAlert("Profile successfully update");
 		return this;
 	}
 

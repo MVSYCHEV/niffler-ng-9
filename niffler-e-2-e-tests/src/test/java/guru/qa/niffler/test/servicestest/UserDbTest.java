@@ -1,18 +1,20 @@
 package guru.qa.niffler.test.servicestest;
 
+import guru.qa.niffler.jupiter.extension.ClientResolver;
 import guru.qa.niffler.model.auth.AuthUserJson;
 import guru.qa.niffler.model.userdata.UserJson;
 import guru.qa.niffler.service.UserClient;
-import guru.qa.niffler.service.impl.UserDbClient;
 import guru.qa.niffler.utils.RandomDataUtils;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 import java.util.List;
 import java.util.UUID;
 
+@ExtendWith(ClientResolver.class)
 public class UserDbTest {
-	UserClient userClient = new UserDbClient();
+	UserClient userClient;
 	// Sychev Test Hibernate
 	// Sychev Test Jdbc
 	// Sychev Test SpringJdbc

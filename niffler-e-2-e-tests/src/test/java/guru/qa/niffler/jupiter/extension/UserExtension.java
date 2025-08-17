@@ -4,7 +4,6 @@ import guru.qa.niffler.jupiter.annotation.meta.User;
 import guru.qa.niffler.model.TestData;
 import guru.qa.niffler.model.userdata.UserJson;
 import guru.qa.niffler.service.UserClient;
-import guru.qa.niffler.service.impl.UserDbClient;
 import guru.qa.niffler.utils.RandomDataUtils;
 import org.junit.jupiter.api.extension.*;
 import org.junit.platform.commons.support.AnnotationSupport;
@@ -21,7 +20,7 @@ public class UserExtension implements
 	public static final ExtensionContext.Namespace NAMESPACE = ExtensionContext.Namespace.create(UserExtension.class);
 	public static final String DEFAULT_PASSWORD = "12345";
 
-	private final UserClient usersClient = new UserDbClient();
+	private final UserClient usersClient = UserClient.getInstance();
 
 	@Override
 	public void beforeEach(ExtensionContext context) {
