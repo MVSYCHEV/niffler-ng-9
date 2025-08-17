@@ -10,8 +10,12 @@ import guru.qa.niffler.model.userdata.UserJson;
 import guru.qa.niffler.page.LoginPage;
 import guru.qa.niffler.utils.RandomDataUtils;
 import guru.qa.niffler.utils.Users;
+import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.parallel.Isolated;
 
+@Order(6)
+@Isolated
 @WebTest
 public class ProfileTest {
 	private static final Config CFG = Config.getInstance();
