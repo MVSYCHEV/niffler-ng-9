@@ -7,13 +7,16 @@ import guru.qa.niffler.model.spend.SpendJson;
 import guru.qa.niffler.service.SpendClient;
 import guru.qa.niffler.utils.RandomDataUtils;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.api.parallel.Isolated;
 
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
-
+@Order(3)
+@Isolated
 @ExtendWith(ClientResolver.class)
 public class SpendDbTest {
 	SpendClient userClient;

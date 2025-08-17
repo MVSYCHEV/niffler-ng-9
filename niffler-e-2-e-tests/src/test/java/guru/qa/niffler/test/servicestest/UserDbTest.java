@@ -6,12 +6,16 @@ import guru.qa.niffler.model.userdata.UserJson;
 import guru.qa.niffler.service.UserClient;
 import guru.qa.niffler.utils.RandomDataUtils;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.api.parallel.Isolated;
 
 import java.util.List;
 import java.util.UUID;
 
+@Order(4)
+@Isolated
 @ExtendWith(ClientResolver.class)
 public class UserDbTest {
 	UserClient userClient;
