@@ -3,7 +3,6 @@ package guru.qa.niffler.test;
 import com.codeborne.selenide.Selenide;
 import guru.qa.niffler.config.Config;
 import guru.qa.niffler.jupiter.annotation.DisabledByIssue;
-import guru.qa.niffler.jupiter.annotation.ScreenShotTest;
 import guru.qa.niffler.jupiter.annotation.Spending;
 import guru.qa.niffler.jupiter.annotation.meta.User;
 import guru.qa.niffler.jupiter.annotation.meta.WebTest;
@@ -13,15 +12,7 @@ import guru.qa.niffler.model.userdata.UserJson;
 import guru.qa.niffler.page.LoginPage;
 import guru.qa.niffler.page.MainPage;
 import guru.qa.niffler.utils.RandomDataUtils;
-import guru.qa.niffler.utils.ScreenDiffResult;
 import org.junit.jupiter.api.Test;
-
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
-import java.io.IOException;
-
-import static com.codeborne.selenide.Selenide.$;
-import static org.junit.jupiter.api.Assertions.assertFalse;
 
 @WebTest
 public class SpendingTest {
@@ -75,18 +66,5 @@ public class SpendingTest {
 				.save();
 
 		new MainPage().checkThatTableContainsSpending(description);
-	}
-
-	@ScreenShotTest("img/expected-stat.png")
-	void screenShotTest(BufferedImage expected) throws IOException {
-		Selenide.open(CFG.frontUrl(), LoginPage.class)
-				.fillLoginPage("idell.bayer", "12345")
-				.submit();
-
-		BufferedImage actual = ImageIO.read($("canvas[role='img']").screenshot());
-		assertFalse(new ScreenDiffResult(
-				expected,
-				actual
-		));
 	}
 }

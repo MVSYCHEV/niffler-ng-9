@@ -30,7 +30,8 @@ public class ScreenShotTestExtension implements ParameterResolver, TestExecution
 	@SneakyThrows
 	@Override
 	public BufferedImage resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext) throws ParameterResolutionException {
-		return ImageIO.read(new ClassPathResource("img/expected-stat.png").getInputStream());
+		ScreenShotTest annotation = extensionContext.getRequiredTestMethod().getAnnotation(ScreenShotTest.class);
+		return ImageIO.read(new ClassPathResource(annotation.value()).getInputStream());
 	}
 
 	@Override
@@ -75,7 +76,9 @@ public class ScreenShotTestExtension implements ParameterResolver, TestExecution
 
 	private static byte[] imageToBytes(BufferedImage image) {
 		try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
-			ImageIO.write(image, "png", outputStream);
+			if (image != null) {
+				ImageIO.write(image, "png", outputStream);
+			}
 			return outputStream.toByteArray();
 		} catch (IOException e) {
 			throw new RuntimeException(e);
