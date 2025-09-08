@@ -15,17 +15,26 @@ public class AllureBackendLogsExtension implements SuiteExtension {
 	@SneakyThrows
 	@Override
 	public void afterSuite() {
+		createLogsTestCase("Niffler-auth log", "./logs/niffler-auth/app.log");
+		createLogsTestCase("Niffler-currency log", "./logs/niffler-currency/app.log");
+		createLogsTestCase("Niffler-gateway log", "./logs/niffler-gateway/app.log");
+		createLogsTestCase("Niffler-spend log", "./logs/niffler-spend/app.log");
+		createLogsTestCase("Niffler-userdata log", "./logs/niffler-userdata/app.log");
+	}
+
+	@SneakyThrows
+	private void createLogsTestCase(String name, String pathToLogsFile) {
 		final AllureLifecycle allureLifecycle = Allure.getLifecycle();
 		final String caseId = UUID.randomUUID().toString();
-		allureLifecycle.scheduleTestCase(new TestResult().setUuid(caseId).setName(caseName));
+		allureLifecycle.scheduleTestCase(new TestResult().setUuid(caseId).setName(name));
 		allureLifecycle.startTestCase(caseId);
 
 		allureLifecycle.addAttachment(
-				"Niffler-auth log",
+				name,
 				"text/html",
 				".log",
 				Files.newInputStream(
-						Path.of("./logs/niffler-auth/app.log")
+						Path.of(pathToLogsFile)
 				)
 		);
 
