@@ -11,7 +11,7 @@ import static com.codeborne.selenide.Condition.visible;
 import static com.codeborne.selenide.Selenide.$;
 
 @ParametersAreNonnullByDefault
-public class AllPeoplePage {
+public class AllPeoplePage extends BasePage<AllPeoplePage> {
 	private final SelenideElement allTable = $("#all");
 
 	@Step("Проверить, что таблица 'All people' отображается")

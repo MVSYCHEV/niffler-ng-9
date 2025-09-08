@@ -2,6 +2,7 @@ package guru.qa.niffler.service;
 
 import guru.qa.niffler.model.spend.CategoryJson;
 import guru.qa.niffler.model.spend.SpendJson;
+import guru.qa.niffler.service.impl.SpendDbClient;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -11,6 +12,10 @@ import java.util.UUID;
 
 @ParametersAreNonnullByDefault
 public interface SpendClient {
+
+	static SpendClient getInstance() {
+		return new SpendDbClient();
+	}
 	/**
 	 * Spends
 	 */

@@ -1,20 +1,22 @@
 package guru.qa.niffler.test.servicestest;
 
+import guru.qa.niffler.jupiter.extension.ClientResolver;
 import guru.qa.niffler.model.spend.CategoryJson;
 import guru.qa.niffler.model.spend.CurrencyValues;
 import guru.qa.niffler.model.spend.SpendJson;
 import guru.qa.niffler.service.SpendClient;
-import guru.qa.niffler.service.impl.SpendDbClient;
 import guru.qa.niffler.utils.RandomDataUtils;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
+@ExtendWith(ClientResolver.class)
 public class SpendDbTest {
-	SpendClient userClient = new SpendDbClient();
+	SpendClient userClient;
 	private final String username = "robby.effertz";
 
 	@Test
