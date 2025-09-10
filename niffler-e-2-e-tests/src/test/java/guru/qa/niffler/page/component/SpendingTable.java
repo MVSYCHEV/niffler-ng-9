@@ -1,18 +1,25 @@
 package guru.qa.niffler.page.component;
 
 import com.codeborne.selenide.ElementsCollection;
+import com.codeborne.selenide.Selenide;
 import com.codeborne.selenide.SelenideElement;
 import guru.qa.niffler.page.EditSpendingPage;
+import guru.qa.niffler.utils.ScreenDiffResult;
 import io.qameta.allure.Step;
 import org.openqa.selenium.By;
 
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
 
 import static com.codeborne.selenide.CollectionCondition.size;
+import static com.codeborne.selenide.CollectionCondition.texts;
 import static com.codeborne.selenide.Condition.text;
 import static com.codeborne.selenide.Condition.visible;
 import static com.codeborne.selenide.Selenide.$;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 @ParametersAreNonnullByDefault
 public class SpendingTable {
@@ -21,6 +28,8 @@ public class SpendingTable {
 	private final By deleteButton = By.id("delete");
 	private final By deleteButtonAlert = By.cssSelector("span.MuiTouchRipple-root.css-w0pj6f");
 	private final By searchInput = By.cssSelector("input.MuiInputBase-input.css-mnn31");
+	private final ElementsCollection widgets = $("#legend-container").$$("li");
+	private final SelenideElement spendingDiagram = $("canvas[role='img']");
 
 	public SpendingTable(@Nonnull SelenideElement self) {
 		this.self = self;
@@ -80,6 +89,23 @@ public class SpendingTable {
 	@Nonnull
 	public SpendingTable checkTableSize(int expectedSize) {
 		self.$("tbody").$$("tr").shouldHave(size(expectedSize));
+		return this;
+	}
+
+	@Step("Виджеты под диаграммой расходов содержат текст '{widgetsTexts}'")
+	public SpendingTable checkWidgets(String... widgetsTexts) {
+		widgets.shouldHave(texts(widgetsTexts));
+		return this;
+	}
+
+	@Step("Проверить изображение диаграммы расходов")
+	public SpendingTable checkSpendingDiagram(BufferedImage expected) throws IOException {
+		Selenide.sleep(5000);
+		BufferedImage actual = ImageIO.read(spendingDiagram.screenshot());
+		assertFalse(new ScreenDiffResult(
+				expected,
+				actual
+		));
 		return this;
 	}
 }

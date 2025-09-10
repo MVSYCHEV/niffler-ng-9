@@ -252,7 +252,7 @@ public class UserDbClient implements UserClient {
 	private UserEntity userEntity(String username) {
 		UserEntity user = new UserEntity();
 		user.setUsername(username);
-		user.setCurrency(CurrencyValues.EUR);
+		user.setCurrency(CurrencyValues.RUB);
 		return user;
 	}
 
