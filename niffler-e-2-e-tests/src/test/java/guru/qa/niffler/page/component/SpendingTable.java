@@ -3,10 +3,13 @@ package guru.qa.niffler.page.component;
 import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.Selenide;
 import com.codeborne.selenide.SelenideElement;
+import guru.qa.niffler.condition.Color;
+import guru.qa.niffler.jupiter.extension.ScreenShotTestExtension;
 import guru.qa.niffler.page.EditSpendingPage;
 import guru.qa.niffler.utils.ScreenDiffResult;
 import io.qameta.allure.Step;
 import org.openqa.selenium.By;
+import org.springframework.core.io.ClassPathResource;
 
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -19,6 +22,8 @@ import static com.codeborne.selenide.CollectionCondition.texts;
 import static com.codeborne.selenide.Condition.text;
 import static com.codeborne.selenide.Condition.visible;
 import static com.codeborne.selenide.Selenide.$;
+import static guru.qa.niffler.condition.StatConditions.color;
+import static java.util.Objects.requireNonNull;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 
 @ParametersAreNonnullByDefault
@@ -99,13 +104,27 @@ public class SpendingTable {
 	}
 
 	@Step("Проверить изображение диаграммы расходов")
-	public SpendingTable checkSpendingDiagram(BufferedImage expected) throws IOException {
+	public SpendingTable checkSpendingDiagram(String expectedImagePath) throws IOException {
+		BufferedImage expected = ImageIO.read(new ClassPathResource(expectedImagePath).getInputStream());
 		Selenide.sleep(5000);
-		BufferedImage actual = ImageIO.read(spendingDiagram.screenshot());
 		assertFalse(new ScreenDiffResult(
-				expected,
-				actual
-		));
+						expected,
+						spendingDiagramScreenshot()
+				),
+				ScreenShotTestExtension.ASSERT_SCREEN_MESSAGE);
 		return this;
+	}
+
+	@Step("Проверить, что виджеты содержат цвета {expectedColors}")
+	@Nonnull
+	public SpendingTable checkWidgets(Color... expectedColors) {
+		widgets.should(color(expectedColors));
+		return this;
+	}
+
+	@Step("Получить скриншот диаграммы расходов")
+	@Nonnull
+	public BufferedImage spendingDiagramScreenshot() throws IOException {
+		return ImageIO.read(requireNonNull(spendingDiagram.screenshot()));
 	}
 }

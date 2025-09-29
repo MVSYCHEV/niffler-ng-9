@@ -17,6 +17,7 @@ import java.io.IOException;
 import java.util.Base64;
 
 public class ScreenShotTestExtension implements ParameterResolver, TestExecutionExceptionHandler {
+	public static final String ASSERT_SCREEN_MESSAGE = "Screen comparison failure";
 	public static final ExtensionContext.Namespace NAMESPACE = ExtensionContext.Namespace.create(ScreenShotTestExtension.class);
 
 	private static final ObjectMapper objectMapper = new ObjectMapper();
@@ -45,18 +46,19 @@ public class ScreenShotTestExtension implements ParameterResolver, TestExecution
 					new File("src/test/resources/" + annotation.value())
 			);
 		}
+		if (throwable.getMessage().contains(ASSERT_SCREEN_MESSAGE)) {
+			ScreenDif screenDif = new ScreenDif(
+					"data:image/png;base64," + encoder.encodeToString(imageToBytes(getExpected())),
+					"data:image/png;base64," + encoder.encodeToString(imageToBytes(getActual())),
+					"data:image/png;base64," + encoder.encodeToString(imageToBytes(getDiff()))
+			);
 
-		ScreenDif screenDif = new ScreenDif(
-				"data:image/png;base64," + encoder.encodeToString(imageToBytes(getExpected())),
-				"data:image/png;base64," + encoder.encodeToString(imageToBytes(getActual())),
-				"data:image/png;base64," + encoder.encodeToString(imageToBytes(getDiff()))
-		);
-
-		Allure.addAttachment(
-				"Screenshot diff",
-				"application/vnd.allure.image.diff",
-				objectMapper.writeValueAsString(screenDif)
-		);
+			Allure.addAttachment(
+					"Screenshot diff",
+					"application/vnd.allure.image.diff",
+					objectMapper.writeValueAsString(screenDif)
+			);
+		}
 		throw throwable;
 	}
 
