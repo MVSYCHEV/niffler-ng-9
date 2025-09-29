@@ -4,7 +4,9 @@ import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.Selenide;
 import com.codeborne.selenide.SelenideElement;
 import guru.qa.niffler.condition.Color;
+import guru.qa.niffler.condition.StatConditions;
 import guru.qa.niffler.jupiter.extension.ScreenShotTestExtension;
+import guru.qa.niffler.model.spend.SpendJson;
 import guru.qa.niffler.page.EditSpendingPage;
 import guru.qa.niffler.utils.ScreenDiffResult;
 import io.qameta.allure.Step;
@@ -22,6 +24,7 @@ import static com.codeborne.selenide.CollectionCondition.texts;
 import static com.codeborne.selenide.Condition.text;
 import static com.codeborne.selenide.Condition.visible;
 import static com.codeborne.selenide.Selenide.$;
+import static guru.qa.niffler.condition.SpendsCondition.spends;
 import static guru.qa.niffler.condition.StatConditions.color;
 import static java.util.Objects.requireNonNull;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -35,6 +38,7 @@ public class SpendingTable {
 	private final By searchInput = By.cssSelector("input.MuiInputBase-input.css-mnn31");
 	private final ElementsCollection widgets = $("#legend-container").$$("li");
 	private final SelenideElement spendingDiagram = $("canvas[role='img']");
+	private final ElementsCollection tableRows = get().$$("tbody tr");
 
 	public SpendingTable(@Nonnull SelenideElement self) {
 		this.self = self;
@@ -42,6 +46,10 @@ public class SpendingTable {
 
 	public SpendingTable() {
 		this.self = $("#spendings");
+	}
+
+	public SelenideElement get() {
+		return self;
 	}
 
 	@Step("Кликнуть на кнопку фильтра периода и выбрать '{0}'")
@@ -103,6 +111,24 @@ public class SpendingTable {
 		return this;
 	}
 
+	@Step("Проверить виджеты в порядке '{0}'")
+	public SpendingTable checkBubbles(Widget... expectedWidgets) {
+		widgets.shouldHave(StatConditions.statWidgets(expectedWidgets));
+		return this;
+	}
+
+	@Step("Проверить виджеты в любом порядке '{0}'")
+	public SpendingTable checkBubblesInAnyOrder(Widget... expectedWidgets) {
+		widgets.shouldHave(StatConditions.statWidgetInAnyOrder(expectedWidgets));
+		return this;
+	}
+
+	@Step("Проверить, что виджеты содержат '{0}'")
+	public SpendingTable checkBubbleContains(Widget... expectedWidgets) {
+		widgets.shouldHave(StatConditions.statWidgetContains(expectedWidgets));
+		return this;
+	}
+
 	@Step("Проверить изображение диаграммы расходов")
 	public SpendingTable checkSpendingDiagram(String expectedImagePath) throws IOException {
 		BufferedImage expected = ImageIO.read(new ClassPathResource(expectedImagePath).getInputStream());
@@ -126,5 +152,11 @@ public class SpendingTable {
 	@Nonnull
 	public BufferedImage spendingDiagramScreenshot() throws IOException {
 		return ImageIO.read(requireNonNull(spendingDiagram.screenshot()));
+	}
+
+	@Step("Проверить, что в таблицы отображаются расходы '{0}'")
+	public SpendingTable checkSpends(SpendJson... expectedSpends) {
+		tableRows.shouldHave(spends(expectedSpends));
+		return this;
 	}
 }
